@@ -1,7 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte'
 	import type PaperController from '../lib/Scene/PaperController'
-	import CloseIcon from './buttons/CloseIcon.svelte'
 	import IconButton from './buttons/IconButton.svelte'
 
 	export let paper: PaperController
