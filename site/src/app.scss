@@ -19,7 +19,6 @@
 	--font-size: 16px;
 	--text-color: black;
 	--background-color: white;
-
 	--z-index-top: 99999999;
 }
 
@@ -30,4 +29,8 @@ body {
 	overflow: hidden;
 	font-family: var(--font-family);
 	font-size: var(--font-size);
+}
+
+a {
+	color: var(--background-color);
 }
