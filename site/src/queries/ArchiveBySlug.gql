@@ -1,0 +1,18 @@
+query ArchiveBySlug($slug: String) {
+	archives(filter: { slug: { _eq: $slug } }) {
+		title
+		audio {
+			id
+		}
+		about
+		items {
+			id
+			title
+			description
+			palette
+			image {
+				id
+			}
+		}
+	}
+}

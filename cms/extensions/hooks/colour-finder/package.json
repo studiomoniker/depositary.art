@@ -1,0 +1,28 @@
+{
+	"name": "directus-extension-colour-finder",
+	"description": "Please enter a description for your extension",
+	"icon": "extension",
+	"version": "1.0.0",
+	"keywords": [
+		"directus",
+		"directus-extension",
+		"directus-custom-hook"
+	],
+	"directus:extension": {
+		"type": "hook",
+		"path": "index.js",
+		"source": "src/index.ts",
+		"host": "^9.23.1"
+	},
+	"scripts": {
+		"build": "directus-extension build",
+		"dev": "directus-extension build -w --no-minify",
+		"link": "directus-extension link"
+	},
+	"devDependencies": {
+		"@directus/extensions-sdk": "9.23.1"
+	},
+	"dependencies": {
+		"node-vibrant": "^3.2.1-alpha.1"
+	}
+}

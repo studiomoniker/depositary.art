@@ -1,0 +1,33 @@
+@charset "utf-8";
+
+@use 'styles/reset';
+@use 'styles/page-content';
+
+@font-face {
+	font-family: 'Haben Grotesk';
+	src: url('/fonts/HabenGrotesk-Regular.woff2') format('woff2'),
+		url('/fonts/HabenGrotesk-Regular.woff') format('woff');
+}
+
+:where(:root) {
+	display: grid;
+	height: 100%;
+}
+
+:root {
+	--font-family: 'Haben Grotesk';
+	--font-size: 16px;
+	--text-color: black;
+	--background-color: white;
+
+	--z-index-top: 99999999;
+}
+
+html,
+body {
+	margin: 0;
+	height: 100%;
+	overflow: hidden;
+	font-family: var(--font-family);
+	font-size: var(--font-size);
+}

@@ -1,0 +1,271 @@
+"""ISO8601 Date values"""
+scalar Date
+
+"""BigInt value"""
+scalar GraphQLBigInt
+
+"""A Float or a String"""
+scalar GraphQLStringOrFloat
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+type Query {
+  archives(filter: archives_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [archives!]!
+  archives_aggregated(filter: archives_filter, groupBy: [String], limit: Int, offset: Int, page: Int, search: String, sort: [String]): [archives_aggregated!]!
+  archives_by_id(id: ID!): archives
+  items(filter: items_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [items!]!
+  items_aggregated(filter: items_filter, groupBy: [String], limit: Int, offset: Int, page: Int, search: String, sort: [String]): [items_aggregated!]!
+  items_by_id(id: ID!): items
+}
+
+type archives {
+  about: String
+  audio(filter: directus_files_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): directus_files
+  id: ID!
+  items(filter: items_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [items]
+  items_func: count_functions
+  slug: String!
+  title: String!
+}
+
+type archives_aggregated {
+  avg: archives_aggregated_fields
+  avgDistinct: archives_aggregated_fields
+  count: archives_aggregated_count
+  countAll: Int
+  countDistinct: archives_aggregated_count
+  group: JSON
+  max: archives_aggregated_fields
+  min: archives_aggregated_fields
+  sum: archives_aggregated_fields
+  sumDistinct: archives_aggregated_fields
+}
+
+type archives_aggregated_count {
+  about: Int
+  audio: Int
+  id: Int
+  items: Int
+  slug: Int
+  title: Int
+}
+
+type archives_aggregated_fields {
+  id: Float
+}
+
+input archives_filter {
+  _and: [archives_filter]
+  _or: [archives_filter]
+  about: string_filter_operators
+  audio: directus_files_filter
+  id: number_filter_operators
+  items: items_filter
+  items_func: count_function_filter_operators
+  slug: string_filter_operators
+  title: string_filter_operators
+}
+
+input count_function_filter_operators {
+  count: number_filter_operators
+}
+
+type count_functions {
+  count: Int
+}
+
+input date_filter_operators {
+  _between: [GraphQLStringOrFloat]
+  _eq: String
+  _gt: String
+  _gte: String
+  _in: [String]
+  _lt: String
+  _lte: String
+  _nbetween: [GraphQLStringOrFloat]
+  _neq: String
+  _nin: [String]
+  _nnull: Boolean
+  _null: Boolean
+}
+
+input datetime_function_filter_operators {
+  day: number_filter_operators
+  hour: number_filter_operators
+  minute: number_filter_operators
+  month: number_filter_operators
+  second: number_filter_operators
+  week: number_filter_operators
+  weekday: number_filter_operators
+  year: number_filter_operators
+}
+
+type datetime_functions {
+  day: Int
+  hour: Int
+  minute: Int
+  month: Int
+  second: Int
+  week: Int
+  weekday: Int
+  year: Int
+}
+
+type directus_files {
+  charset: String
+  description: String
+  duration: Int
+  embed: String
+  filename_disk: String
+  filename_download: String!
+  filesize: GraphQLBigInt
+  folder: String
+  height: Int
+  id: ID!
+  location: String
+  metadata: JSON
+  metadata_func: count_functions
+  modified_by: String
+  modified_on: Date
+  modified_on_func: datetime_functions
+  storage: String!
+  tags: JSON
+  tags_func: count_functions
+  title: String
+  type: String
+  uploaded_by: String
+  uploaded_on: Date
+  uploaded_on_func: datetime_functions
+  width: Int
+}
+
+input directus_files_filter {
+  _and: [directus_files_filter]
+  _or: [directus_files_filter]
+  charset: string_filter_operators
+  description: string_filter_operators
+  duration: number_filter_operators
+  embed: string_filter_operators
+  filename_disk: string_filter_operators
+  filename_download: string_filter_operators
+  filesize: number_filter_operators
+  folder: string_filter_operators
+  height: number_filter_operators
+  id: string_filter_operators
+  location: string_filter_operators
+  metadata: string_filter_operators
+  metadata_func: count_function_filter_operators
+  modified_by: string_filter_operators
+  modified_on: date_filter_operators
+  modified_on_func: datetime_function_filter_operators
+  storage: string_filter_operators
+  tags: string_filter_operators
+  tags_func: count_function_filter_operators
+  title: string_filter_operators
+  type: string_filter_operators
+  uploaded_by: string_filter_operators
+  uploaded_on: date_filter_operators
+  uploaded_on_func: datetime_function_filter_operators
+  width: number_filter_operators
+}
+
+type items {
+  archive(filter: archives_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): archives
+  date_created: Date
+  date_created_func: datetime_functions
+  date_updated: Date
+  date_updated_func: datetime_functions
+  description: String!
+  id: ID!
+  image(filter: directus_files_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): directus_files
+  palette: JSON
+  palette_func: count_functions
+  title: String
+  user_created: String
+  user_updated: String
+}
+
+type items_aggregated {
+  avg: items_aggregated_fields
+  avgDistinct: items_aggregated_fields
+  count: items_aggregated_count
+  countAll: Int
+  countDistinct: items_aggregated_count
+  group: JSON
+  max: items_aggregated_fields
+  min: items_aggregated_fields
+  sum: items_aggregated_fields
+  sumDistinct: items_aggregated_fields
+}
+
+type items_aggregated_count {
+  archive: Int
+  date_created: Int
+  date_updated: Int
+  description: Int
+  id: Int
+  image: Int
+  palette: Int
+  title: Int
+  user_created: Int
+  user_updated: Int
+}
+
+type items_aggregated_fields {
+  archive: Float
+  id: Float
+}
+
+input items_filter {
+  _and: [items_filter]
+  _or: [items_filter]
+  archive: archives_filter
+  date_created: date_filter_operators
+  date_created_func: datetime_function_filter_operators
+  date_updated: date_filter_operators
+  date_updated_func: datetime_function_filter_operators
+  description: string_filter_operators
+  id: number_filter_operators
+  image: directus_files_filter
+  palette: string_filter_operators
+  palette_func: count_function_filter_operators
+  title: string_filter_operators
+  user_created: string_filter_operators
+  user_updated: string_filter_operators
+}
+
+input number_filter_operators {
+  _between: [GraphQLStringOrFloat]
+  _eq: GraphQLStringOrFloat
+  _gt: GraphQLStringOrFloat
+  _gte: GraphQLStringOrFloat
+  _in: [GraphQLStringOrFloat]
+  _lt: GraphQLStringOrFloat
+  _lte: GraphQLStringOrFloat
+  _nbetween: [GraphQLStringOrFloat]
+  _neq: GraphQLStringOrFloat
+  _nin: [GraphQLStringOrFloat]
+  _nnull: Boolean
+  _null: Boolean
+}
+
+input string_filter_operators {
+  _contains: String
+  _empty: Boolean
+  _ends_with: String
+  _eq: String
+  _icontains: String
+  _in: [String]
+  _ncontains: String
+  _nempty: Boolean
+  _nends_with: String
+  _neq: String
+  _nin: [String]
+  _nnull: Boolean
+  _nstarts_with: String
+  _null: Boolean
+  _starts_with: String
+}

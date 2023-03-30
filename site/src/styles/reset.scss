@@ -1,0 +1,28 @@
+h1,
+h2,
+h3,
+p {
+	margin: 0;
+	line-height: 1.4em;
+	font-weight: normal;
+}
+
+h1,
+h2,
+h3 {
+	line-height: 0.9em;
+}
+
+main {
+	height: 100%;
+}
+
+canvas {
+	width: 100%;
+	touch-action: none;
+}
+
+button {
+	background: none;
+	border: 0;
+}

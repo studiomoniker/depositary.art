@@ -1,0 +1,40 @@
+@import '_mixins';
+
+.page-content {
+	overflow: auto;
+	box-sizing: border-box;
+	font-size: 1.5em;
+	line-height: 1.4em;
+	padding: 1.5em;
+	color: #111;
+
+	h1 {
+		font-size: 4em;
+		margin-bottom: 0.25em;
+		color: var(--vibrant);
+	}
+
+	a,
+	b,
+	strong {
+		color: var(--dark-vibrant);
+	}
+
+	@include breakpoint('sm') {
+		background: red;
+	}
+
+	.button-close {
+		position: absolute !important;
+		top: 1em;
+		right: 1em;
+	}
+}
+
+p {
+	margin: 0;
+}
+
+p + p {
+	margin-top: 1em;
+}
