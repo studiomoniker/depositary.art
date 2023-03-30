@@ -1,4 +1,5 @@
 import type PaperController from '$lib/Scene/PaperController'
+import { persisted } from 'svelte-local-storage-store'
 import { get, writable } from 'svelte/store'
 import type { Mesh } from 'three'
 import type { OrbitControls as ThreeOrbitControls } from 'three/examples/jsm/controls/OrbitControls'
@@ -20,3 +21,7 @@ export const removeBottomPaper = () => {
 }
 
 export const selectedPaper = writable<PaperController | undefined>(undefined)
+export const preferences = persisted('preferences', {
+	muted: false
+})
+export const hasAudioStarted = writable<boolean>(false)

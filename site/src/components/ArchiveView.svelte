@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Archive } from '$lib/types'
+	import AudioPlayer from './AudioPlayer.svelte'
 	import PaperStack from './PaperStack.svelte'
 
 	export let archive: Archive
@@ -12,6 +13,10 @@
 </svelte:head>
 
 <PaperStack {items} />
+
+{#if archive.audio}
+	<AudioPlayer audioFileId={archive.audio.id} />
+{/if}
 
 <!-- {#if items}
 	{#each items as item}
