@@ -12,7 +12,7 @@
 </script>
 
 <div class="buttons">
-	<IconButton inverted type="mute" on:click={console.log} />
+	<IconButton type="mute" on:click={console.log} />
 	<IconButton
 		type="info"
 		on:click={() => {
