@@ -3,6 +3,7 @@ name: 'deploy cms'
 
 # yamllint disable-line rule:truthy
 on:
+  workflow_dispatch:
   push:
     paths:
       - 'cms/**'
