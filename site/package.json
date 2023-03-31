@@ -20,6 +20,7 @@
 		"@threlte/extras": "^4.9.3",
 		"@threlte/preprocess": "^0.0.2",
 		"@total-typescript/ts-reset": "^0.4.2",
+		"@types/howler": "^2.2.7",
 		"@types/lodash": "^4.14.191",
 		"@types/three": "^0.146.0",
 		"@typescript-eslint/eslint-plugin": "^5.27.0",
@@ -48,6 +49,7 @@
 	"dependencies": {
 		"@sentry/node": "^7.45.0",
 		"graphql": "^16.6.0",
+		"howler": "^2.2.3",
 		"lodash": "^4.17.21",
 		"svelte-local-storage-store": "^0.4.0",
 		"vite-plugin-glsl": "^1.0.2"

@@ -1,45 +1,30 @@
 <script lang="ts">
-	import { tweened } from 'svelte/motion'
-	import { onDestroy } from 'svelte'
+	import { Howl } from 'howler'
 	import { hasAudioStarted, preferences } from '../store'
 
 	export let audioFileId: string
-
 	const url = `${import.meta.env.VITE_CMS}/assets/${audioFileId}?access_token=${
 		import.meta.env.VITE_AUTH_TOKEN
 	}`
 
-	let audio: HTMLAudioElement
-	let volume = tweened(1, {
-		duration: 500
-	})
+	Howler.autoUnlock = true
 
-	const unsub = volume.subscribe((val) => {
-		if (!audio) return
-		audio.volume = val
+	const sound: Howl = new Howl({
+		src: [url],
+		html5: false,
+		loop: true,
+		preload: true,
+		volume: $preferences.muted ? 0 : 1,
+		format: 'mp3',
+		onunlock: () => sound.play(),
+		onplay: () => ($hasAudioStarted = true)
 	})
 
 	$: {
 		if ($preferences.muted) {
-			volume.set(0)
+			sound.fade(1, 0, 500)
 		} else {
-			volume.set(1)
+			sound.fade(0, 1, 500)
 		}
 	}
-
-	const onTouchStart = () => audio.play()
-	const onPlay = () => {
-		if (!$hasAudioStarted) $hasAudioStarted = true
-	}
-
-	onDestroy(unsub)
 </script>
-
-<svelte:body
-	on:touchstart={onTouchStart}
-	on:mousedown={onTouchStart}
-	on:dragstart={onTouchStart}
-	on:pointerdown={onTouchStart}
-/>
-
-<audio src={url} crossorigin="anonymous" bind:this={audio} on:play={onPlay} />
