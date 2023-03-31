@@ -98,7 +98,9 @@
 
 {#if paper.hasTexture}
 	<T.Group
-		position={[combinedPosition.x, combinedPosition.y, combinedPosition.z]}
+		position.x={combinedPosition.x}
+		position.y={combinedPosition.y}
+		position.z={combinedPosition.z}
 		scale.y={$scale}
 		scale.x={$scale}
 		rotation.z={$rotation.z}
