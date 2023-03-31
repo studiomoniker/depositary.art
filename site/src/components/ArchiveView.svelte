@@ -17,9 +17,3 @@
 {#if archive.audio}
 	<AudioPlayer audioFileId={archive.audio.id} />
 {/if}
-
-<!-- {#if items}
-	{#each items as item}
-		{item.title}
-	{/each}
-{/if} -->
