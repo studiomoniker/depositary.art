@@ -49,26 +49,32 @@
 		width: 4rem;
 		height: 4rem;
 		padding: 0;
-		transition: all ease-out 250ms;
+		transition: transform ease-out 250ms;
 
 		--background-color: #000;
 		--text-color: #fff;
-		&:hover:not(.button-close) {
-			--background-color: #fff;
-			--text-color: #000;
+
+		@media (hover: hover) {
+			&:hover:not(.button-close) {
+				--background-color: #fff;
+				--text-color: #000;
+			}
+
+			&:hover.button-close {
+				transform: rotateZ(90deg);
+			}
 		}
 
 		&.inverted {
 			--background-color: #fff;
 			--text-color: #000;
-			&:hover:not(.button-close) {
-				--background-color: #000;
-				--text-color: #fff;
-			}
-		}
 
-		&:hover.button-close {
-			transform: rotateZ(90deg);
+			@media (hover: hover) {
+				&:hover:not(.button-close) {
+					--background-color: #000;
+					--text-color: #fff;
+				}
+			}
 		}
 
 		svg {
