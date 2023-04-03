@@ -1,38 +1,38 @@
 @import '_variables';
 
 @mixin breakpoint-lt($to) {
-	@media (max-width: em(map-get($breakpoints, $to) - 1px, 16px)) {
+	@media (max-width: calc(map-get($breakpoints, $to) - 1px)) {
 		@content;
 	}
 }
 
 @mixin breakpoint-lte($to) {
-	@media (max-width: em(map-get($breakpoints, $to), 16px)) {
+	@media (max-width: calc(map-get($breakpoints, $to))) {
 		@content;
 	}
 }
 
 @mixin breakpoint-gt($from) {
-	@media (min-width: em(map-get($breakpoints, $from) + 1, 16px)) {
+	@media (min-width: calc(map-get($breakpoints, $from) + 1)) {
 		@content;
 	}
 }
 
 @mixin breakpoint-gte($from) {
-	@media (min-width: em(map-get($breakpoints, $from), 16px)) {
+	@media (min-width: calc(map-get($breakpoints, $from))) {
 		@content;
 	}
 }
 
 @mixin breakpoint-between($from, $to) {
-	@media (min-width: em(map-get($breakpoints, $from) + 1, 16px)) and (max-width: em(map-get($breakpoints, $to) - 1, 16px)) {
+	@media (min-width: calc(map-get($breakpoints, $from) + 1)) and (max-width: calc(map-get($breakpoints, $to) - 1)) {
 		@content;
 	}
 }
 
 @mixin breakpoint($from, $to: null) {
 	@if ($from and $to) {
-		@media (min-width: em(map-get($breakpoints, $from), 16px)) and (max-width: em(map-get($breakpoints, $to) - 1, 16px)) {
+		@media (min-width: calc(map-get($breakpoints, $from))) and (max-width: calc(map-get($breakpoints, $to) - 1)) {
 			@content;
 		}
 	} @else if ($from) {
