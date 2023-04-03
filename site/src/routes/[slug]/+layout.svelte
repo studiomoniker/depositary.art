@@ -17,6 +17,8 @@
 	const updateMousePosition = (e: MouseEvent) => {
 		if (!browser) return
 
+		// x: left to right, 0 - 1
+		// y: top to bottom, 0 - 1
 		const x = e.clientX / document.body.clientWidth
 		const y = e.clientY / document.body.clientHeight
 
@@ -24,7 +26,7 @@
 	}
 </script>
 
-<svelte:window on:mousemove={updateMousePosition} />
+<svelte:window on:pointermove={updateMousePosition} />
 
 <div class="buttons">
 	<IconButton type={$preferences.muted ? 'unmute' : 'mute'} on:click={toggleMute} />
