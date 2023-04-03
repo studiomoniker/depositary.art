@@ -1,20 +1,14 @@
 <script lang="ts">
-	import { OrbitControls, T, Three, useThrelte } from '@threlte/core'
-	import type { OrbitControls as ThreeOrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+	import { T } from '@threlte/core'
+	import { interactivity } from '@threlte/extras'
 
 	import { DirectionalLight } from 'three'
 	import { INITIAL_CAMERA_POSITION, INITIAL_CAMERA_ZOOM } from '../../settings'
 	import { cameraControls, draggingPaperMesh, enableOrbitControls, papers } from '../../store'
 	import ControlPoint from './ControlPoint.svelte'
 	import NewPaper from './Paper.svelte'
-	// import { spring } from 'svelte/motion';
 
-	let controls: ThreeOrbitControls
-
-	$: if (controls) {
-		cameraControls.set(controls)
-		controls.saveState()
-	}
+	interactivity()
 
 	// const { pointer } = useThrelte();
 
@@ -56,11 +50,7 @@
 		near={0.1}
 		far={100}
 		zoom={INITIAL_CAMERA_ZOOM}
-	>
-		{#if $enableOrbitControls}
-			<OrbitControls enableDamping bind:controls />
-		{/if}
-	</T.OrthographicCamera>
+	/>
 {:else}
 	<T.PerspectiveCamera
 		lookAt={{ x: 0, y: 0, z: 0 }}
@@ -76,7 +66,7 @@
 	</T.PerspectiveCamera>
 {/if}
 
-<Three type={light} />
+<T is={light} />
 <T.AmbientLight position={[0, 10, 20]} intensity={0.8} />
 
 {#each $papers as p (p.id)}

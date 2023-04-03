@@ -3,6 +3,7 @@
 	import { createEventDispatcher } from 'svelte'
 	import { get } from 'svelte/store'
 	import { Mesh, OrthographicCamera, PerspectiveCamera, Vector2, Vector3 } from 'three'
+	import { pointer } from '../../store'
 
 	const dispatch = createEventDispatcher<{
 		change: {
@@ -11,7 +12,7 @@
 		}
 	}>()
 
-	const { pointer, camera } = useThrelte()
+	const { camera } = useThrelte()
 
 	// function isPerspectiveCamera(
 	// 	camera: PerspectiveCamera | OrthographicCamera
@@ -23,10 +24,12 @@
 	const mousePosition = new Vector3()
 	const getMousePosition = () => {
 		// mapping 2d screen space to 3d world space
-		const { x: mouseX, y: mouseY } = get(pointer)
+		const { x: mouseX, y: mouseY } = $pointer
+		const normalizedMouse = { x: -1 + mouseX * 2, y: 1 - mouseY * 2 }
+
 		const cam = get(camera) as PerspectiveCamera | OrthographicCamera
 
-		unprojected.set(mouseX, mouseY, 0).unproject(cam)
+		unprojected.set(normalizedMouse.x, normalizedMouse.y, 0).unproject(cam)
 		unprojected.sub(cam.position).normalize()
 
 		const targetZ = 0 // specify z position

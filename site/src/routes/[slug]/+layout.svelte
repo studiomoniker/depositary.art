@@ -1,10 +1,11 @@
 <script lang="ts">
+	import { browser } from '$app/environment'
 	import { goto } from '$app/navigation'
 	import { page } from '$app/stores'
 	import '../../app.scss'
 	import ArchiveView from '../../components/ArchiveView.svelte'
 	import IconButton from '../../components/buttons/IconButton.svelte'
-	import { preferences } from '../../store'
+	import { pointer, preferences } from '../../store'
 	import type { LayoutData } from './$houdini'
 
 	export let data: LayoutData
@@ -12,7 +13,18 @@
 	$: ({ ArchiveBySlug } = data)
 
 	const toggleMute = () => ($preferences.muted = !$preferences.muted)
+
+	const updateMousePosition = (e: MouseEvent) => {
+		if (!browser) return
+
+		const x = e.clientX / document.body.clientWidth
+		const y = e.clientY / document.body.clientHeight
+
+		$pointer = { x, y }
+	}
 </script>
+
+<svelte:window on:mousemove={updateMousePosition} />
 
 <div class="buttons">
 	<IconButton type={$preferences.muted ? 'unmute' : 'mute'} on:click={toggleMute} />

@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { browser } from '$app/environment'
 	import { T, useFrame } from '@threlte/core'
+	import { onDestroy } from 'svelte'
 	import { spring, tweened } from 'svelte/motion'
 	import { get } from 'svelte/store'
 	import { MathUtils } from 'three'
-	import { selectedPaper } from '../../store'
+	import { pointer, selectedPaper } from '../../store'
 	import type PaperController from './PaperController'
 	import PaperMesh from './PaperMesh.svelte'
 
@@ -44,15 +44,13 @@
 	const rotationY = spring(0, { precision: 0.0001, stiffness: 0.05 })
 	const rotationX = spring(0, { precision: 0.0001, stiffness: 0.05 })
 
-	const updateMousePosition = (e: MouseEvent) => {
-		if (!browser || !selected) return
-
-		const x = -0.5 + e.screenX / document.body.clientWidth
-		const y = -0.5 + e.screenY / document.body.clientHeight
-
-		rotationX.set(-y * maxOffset)
-		rotationY.set(x * maxOffset)
-	}
+	onDestroy(
+		pointer.subscribe(({ x, y }) => {
+			if (!selected) return
+			rotationX.set(-y * maxOffset)
+			rotationY.set(x * maxOffset)
+		})
+	)
 
 	useFrame((_, delta) => {
 		paper.tick()
@@ -93,8 +91,6 @@
 		}
 	}
 </script>
-
-<svelte:window on:mousemove={updateMousePosition} />
 
 {#if paper.hasTexture}
 	<T.Group
