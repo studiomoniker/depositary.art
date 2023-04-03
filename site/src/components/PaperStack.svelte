@@ -16,20 +16,28 @@
 	})
 </script>
 
-<Canvas
-	shadows={true}
-	bind:ctx={three}
-	colorSpace={LinearSRGBColorSpace}
-	toneMapping={NoToneMapping}
->
-	<Scene />
-</Canvas>
+<div class="canvas-container">
+	<Canvas
+		shadows={true}
+		bind:ctx={three}
+		colorSpace={LinearSRGBColorSpace}
+		toneMapping={NoToneMapping}
+	>
+		<Scene />
+	</Canvas>
+</div>
 
 <div class="debug">
 	numPapers: {$papers.length}
 </div>
 
 <style>
+	.canvas-container {
+		height: 100%;
+		width: 100%;
+		user-select: none;
+	}
+
 	.debug {
 		position: absolute;
 		background: white;
