@@ -59,10 +59,9 @@ class PaperController {
 
 	// xy: Spring<{ x: number; y: number }>;
 	xy = writable({ x: 0, y: 0 })
-	spawnPosition
-	currentPosition = new Vector3()
-	compensatedPosition = writable({ x: 0, y: 0 })
-	preDragPosition = { x: 0, y: 0 }
+	spawnPosition = new Vector2()
+	// currentPosition = new Vector3()
+	// compensatedPosition = writable({ x: 0, y: 0 })
 
 	rotation = writable({ x: 0, z: Math.random() * Math.PI })
 	lastSelected = Date.now()
@@ -77,7 +76,13 @@ class PaperController {
 	textOpacity = writable(0)
 	dragStart = Date.now()
 
-	constructor(data: PaperData, ctx: ThrelteContext) {
+	constructor(
+		data: PaperData & {
+			onload: () => void
+			onerror: (err: Error) => void
+		},
+		ctx: ThrelteContext
+	) {
 		this.id = data.id
 		this.metadata = data.metadata
 		this.threlte = ctx
@@ -130,11 +135,16 @@ class PaperController {
 					})
 					t.set({ x: this.spawnPosition.x, y: this.spawnPosition.y })
 				},
-				data.selected ? 0 : 500 + Math.random() * 3000
+				// data.selected ? 0 : 500 + Math.random() * 3000
+				0
 			)
 			// }, Math.random() * 500);
 
-			if (data.selected) this.select()
+			if (data.selected) {
+				setTimeout(() => this.select(), 10)
+			}
+
+			data.onload()
 		})
 
 		this.order = data.order

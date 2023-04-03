@@ -4,11 +4,12 @@ import { shuffle } from 'lodash'
 import { get } from 'svelte/store'
 import { Camera, Vector3 } from 'three'
 import { randFloat } from 'three/src/math/MathUtils'
+import { papers } from '../store'
 import PaperController from './Scene/PaperController'
 import type { ArchiveItem } from './types'
 import { getUnprojectedPosition } from './utils/getUnprojectedPosition'
 
-export const createPaper = ({
+export const createPaper = async ({
 	id,
 	x,
 	y,
@@ -24,18 +25,22 @@ export const createPaper = ({
 	threlte: ThrelteContext
 	item: ArchiveItem
 	selected: boolean
-}) => {
-	return new PaperController(
-		{
-			id,
-			x,
-			y,
-			order: order,
-			metadata: item,
-			selected
-		},
-		threlte
-	)
+}): Promise<PaperController> => {
+	return new Promise((resolve, reject) => {
+		const p: PaperController = new PaperController(
+			{
+				id,
+				x,
+				y,
+				order: order,
+				metadata: item,
+				selected,
+				onload: () => resolve(p),
+				onerror: (error) => reject(error)
+			},
+			threlte
+		)
+	})
 }
 
 export const getRandomPaperPosition = (camera: Camera) => {
@@ -62,7 +67,7 @@ const calcInitialPaperPositions = (ctx: ThrelteContext) => {
 
 	let r = 0
 	// const numCircles = 3;
-	const numCircles = 10
+	const numCircles = 3
 
 	for (let i = 0; i < numCircles; i++) {
 		const numPapers = i === 0 ? 1 : Math.round(2 * r * Math.PI * 0.6)
@@ -87,45 +92,44 @@ const calcInitialPaperPositions = (ctx: ThrelteContext) => {
 }
 
 export const initPapers = (ctx: ThrelteContext) => {
+	papers.set([])
 	console.log('create random papers')
-	const papers: PaperController[] = []
 	const positions = calcInitialPaperPositions(ctx)
 
 	// positions = positions.slice(0, 10);
 	positions.forEach(({ x, y }, i) => {
-		const texture = `textures/${papers.length % 29}.jpg`
+		const texture = `textures/${i % 29}.jpg`
 		const fakeId = Math.round(Math.random() * 9999999).toString()
-		papers.push(
-			createPaper({
+		createPaper({
+			id: fakeId,
+			x,
+			y,
+			order: i,
+			threlte: ctx,
+			item: {
 				id: fakeId,
-				x,
-				y,
-				order: i,
-				threlte: ctx,
-				item: {
-					id: fakeId,
-					image: {
-						id: texture
-					},
-					title: `Test Title ${i}`,
-					description: `<p>Test Description ${i}</p>`,
-					palette: {
-						Vibrant: [0, 200, 200]
-					}
+				image: {
+					id: texture
 				},
-				selected: false
+				title: `Test Title ${i}`,
+				description: `<p>Test Description ${i}</p>`,
+				palette: {
+					Vibrant: [0, 200, 200]
+				}
+			},
+			selected: false
+		}).then((p) => {
+			papers.update((items) => {
+				items.push(p)
+				return items
 			})
-		)
+		})
 	})
-
-	console.log('num papers', papers.length)
-
-	return papers
 }
 
 export const createPapersFromItems = (ctx: ThrelteContext, items: ArchiveItem[]) => {
+	papers.set([])
 	console.log('create papers from items')
-	const papers: PaperController[] = []
 	const positions = calcInitialPaperPositions(ctx)
 
 	let createdSelectedPaper = false
@@ -138,20 +142,19 @@ export const createPapersFromItems = (ctx: ThrelteContext, items: ArchiveItem[])
 		const selected = !createdSelectedPaper && selectedItemId === item.id
 		if (selected) createdSelectedPaper = true
 
-		papers.push(
-			createPaper({
-				id: Math.round(Math.random() * 9999999).toString(),
-				x,
-				y,
-				order: i,
-				threlte: ctx,
-				item,
-				selected
+		createPaper({
+			id: Math.round(Math.random() * 9999999).toString(),
+			x,
+			y,
+			order: i,
+			threlte: ctx,
+			item,
+			selected
+		}).then((p) => {
+			papers.update((items) => {
+				items.push(p)
+				return items
 			})
-		)
+		})
 	})
-
-	console.log('num papers', papers.length)
-
-	return papers
 }

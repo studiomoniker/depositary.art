@@ -12,7 +12,7 @@
 	let three: ThrelteContext
 
 	onMount(() => {
-		$papers = createPapersFromItems(three, items)
+		createPapersFromItems(three, items)
 	})
 </script>
 
