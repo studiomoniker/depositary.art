@@ -134,7 +134,7 @@ class PaperController {
 			)
 			// }, Math.random() * 500);
 
-			if (data.selected) this.onClick()
+			if (data.selected) this.select()
 		})
 
 		this.order = data.order
@@ -247,6 +247,22 @@ class PaperController {
 		this.z.set(this.zIndex)
 	}
 
+	async select() {
+		this.isSelected = true
+		selectedPaper.set(this)
+
+		const { x, y } = get(this.xy)
+		const { x: rotationX, z: rotationZ } = get(this.rotation)
+
+		this.selector.select({
+			x,
+			y,
+			rotationX,
+			rotationZ,
+			z: get(this.z)
+		})
+	}
+
 	async deselect() {
 		this.moveToTop()
 		await this.selector.deselect()
@@ -263,20 +279,8 @@ class PaperController {
 			await this.deselect()
 			gotoCurrentArchive()
 		} else {
+			await this.select()
 			gotoItemSlug(this.metadata.id)
-			this.isSelected = true
-			selectedPaper.set(this)
-
-			const { x, y } = get(this.xy)
-			const { x: rotationX, z: rotationZ } = get(this.rotation)
-
-			this.selector.select({
-				x,
-				y,
-				rotationX,
-				rotationZ,
-				z: get(this.z)
-			})
 		}
 	}
 
