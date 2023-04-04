@@ -1,11 +1,11 @@
 <script lang="ts">
+	import * as detectIt from 'detect-it'
 	import { onDestroy, onMount } from 'svelte'
 	import type PaperController from '../lib/Scene/PaperController'
 	import PaperContent from './PaperContent.svelte'
-	import * as detectIt from 'detect-it'
-	import { browser } from '$app/environment'
 
 	export let paper: PaperController
+	$: textOpacity = paper.textOpacity
 
 	let impetus: any
 	let el: HTMLDivElement
@@ -35,7 +35,7 @@
 
 <div
 	class="paper-html"
-	class:scrollable={detectIt.primaryInput !== 'touch'}
+	class:scrollable={detectIt.primaryInput !== 'touch' && $textOpacity > 0.7}
 	style="width: {width}px; height: {height}px;"
 	bind:this={el}
 >
