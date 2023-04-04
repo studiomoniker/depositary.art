@@ -4,6 +4,7 @@
 	import type PaperController from '../lib/Scene/PaperController'
 	import PaperContent from './PaperContent.svelte'
 	import * as detectIt from 'detect-it'
+	import { browser } from '$app/environment'
 
 	export let paper: PaperController
 
@@ -16,6 +17,7 @@
 
 	onMount(() => {
 		if (detectIt.primaryInput !== 'touch') return
+		if (!browser) return
 
 		impetus = new Impetus({
 			boundY: [0, el.scrollHeight],
