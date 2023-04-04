@@ -46,8 +46,10 @@
 	"type": "module",
 	"dependencies": {
 		"@sentry/node": "^7.45.0",
+		"detect-it": "^4.0.1",
 		"graphql": "^16.6.0",
 		"howler": "^2.2.3",
+		"impetus": "^0.8.8",
 		"lodash": "^4.17.21",
 		"svelte-local-storage-store": "^0.4.0",
 		"vite-plugin-glsl": "^1.0.2"

@@ -8,7 +8,7 @@
 	import type PaperController from './PaperController'
 	import PaperMesh from './PaperMesh.svelte'
 
-	const DISABLE_FLOAT = true
+	const DISABLE_FLOAT = false
 
 	export let paper: PaperController
 

@@ -2,7 +2,7 @@
 	import { T } from '@threlte/core'
 	import { HTML, useTexture } from '@threlte/extras'
 	import { BackSide, DoubleSide, FrontSide, Vector3, type Mesh } from 'three'
-	import PaperContent from '../../components/PaperContent.svelte'
+	import PaperHTML from '../../components/PaperHTML.svelte'
 	import { PAPER_THICKNESS } from '../../settings'
 	import type PaperController from './PaperController'
 
@@ -28,16 +28,9 @@
 	bind:ref={mesh}
 	castShadow={$opacity >= 1}
 	receiveShadow
-	let:ref
-	on:pointerenter={(e) => {
-		e.stopPropagation()
-		paper.onMouseOver()
-	}}
+	on:pointerenter={(e) => paper.onMouseOver()}
 	on:pointerleave={() => paper.onMouseOut()}
 	on:pointerdown={(e) => {
-		console.log('pointer down')
-		// console.log(e)
-		e.stopPropagation()
 		startPosition = new Vector3().copy(e.point)
 		paper.startDrag(mesh)
 	}}
@@ -71,7 +64,7 @@
 					rotation.x={Math.PI}
 					rotation.z={paper.isPortrait ? 0 : Math.PI / 2}
 				>
-					<PaperContent {paper} />
+					<PaperHTML {paper} />
 				</HTML>
 			{/if}
 		</T.Mesh>

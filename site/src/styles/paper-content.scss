@@ -1,0 +1,63 @@
+@import '_mixins';
+
+.paper-html {
+	position: absolute;
+	transform: translateX(-50%) translateY(-50%); // pointer-events: all;
+	overflow: hidden;
+
+	&.scrollable {
+		overflow: auto;
+	}
+}
+
+.paper-content {
+	box-sizing: border-box;
+	font-size: 1.5rem;
+	line-height: 1.4rem;
+	padding: 1.75rem 2rem;
+	color: #111;
+
+	h1 {
+		font-size: 3em;
+		margin-bottom: 0.25em;
+		margin-right: 3.5rem;
+		color: var(--vibrant);
+	}
+
+	a,
+	b,
+	strong {
+		color: var(--dark-muted);
+	}
+
+	.button-container {
+		position: absolute !important;
+		top: 0.75em;
+		right: 0.75em;
+		height: 2.5em;
+		width: 2.5em;
+	}
+
+	@include breakpoint-lt('md') {
+		font-size: 2.5rem;
+
+		h1 {
+			font-size: 2.2em;
+		}
+
+		.button-container {
+			top: 0.5em;
+			right: 0.5em;
+			height: 1.5em;
+			width: 1.5em;
+		}
+	}
+}
+
+p {
+	margin: 0;
+}
+
+p + p {
+	margin-top: 1em;
+}
