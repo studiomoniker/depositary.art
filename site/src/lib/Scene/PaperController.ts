@@ -136,10 +136,8 @@ class PaperController {
 					})
 					t.set({ x: this.spawnPosition.x, y: this.spawnPosition.y })
 				},
-				// data.selected ? 0 : 500 + Math.random() * 3000
-				0
+				data.selected || import.meta.env.DEV ? 0 : 500 + Math.random() * 3000
 			)
-			// }, Math.random() * 500);
 
 			if (data.selected) {
 				setTimeout(() => this.select(), 10)
