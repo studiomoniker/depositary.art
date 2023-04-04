@@ -1,8 +1,9 @@
 <script lang="ts">
+	import '../../app.scss'
+
 	import { browser } from '$app/environment'
 	import { goto } from '$app/navigation'
 	import { page } from '$app/stores'
-	import '../../app.scss'
 	import ArchiveView from '../../components/ArchiveView.svelte'
 	import IconButton from '../../components/buttons/IconButton.svelte'
 	import { pointer, preferences } from '../../store'
@@ -51,9 +52,11 @@
 
 <style>
 	.buttons {
-		position: absolute;
+		position: fixed;
 		z-index: var(--z-index-top);
 		top: 1rem;
 		right: 1rem;
+		width: 7rem;
+		display: flex;
 	}
 </style>

@@ -1,4 +1,3 @@
-import { get } from 'svelte/store'
 import { load_ArchiveBySlug } from '$houdini'
 import type { LayoutServerLoad } from '../$types'
 

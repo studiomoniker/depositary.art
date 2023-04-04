@@ -16,33 +16,30 @@
 	})
 </script>
 
-<div class="canvas-container">
-	<Canvas
-		shadows={true}
-		bind:ctx={three}
-		colorSpace={LinearSRGBColorSpace}
-		toneMapping={NoToneMapping}
-	>
-		<Scene />
-	</Canvas>
-</div>
+<Canvas
+	shadows={true}
+	bind:ctx={three}
+	colorSpace={LinearSRGBColorSpace}
+	toneMapping={NoToneMapping}
+>
+	<Scene />
+</Canvas>
 
-<div class="debug">
+<div class="debug" class:visible={import.meta.env.DEV}>
 	numPapers: {$papers.length}
 </div>
 
 <style>
-	.canvas-container {
-		height: 100%;
-		width: 100%;
-		user-select: none;
-	}
-
 	.debug {
 		position: absolute;
 		background: white;
 		padding: 2px;
 		bottom: 0;
 		right: 0;
+		display: none;
+	}
+
+	.debug.visible {
+		display: block;
 	}
 </style>

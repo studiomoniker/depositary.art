@@ -30,7 +30,7 @@
 <style lang="scss">
 	.about-page {
 		font-size: 1.25rem;
-		--width: 600px;
+		--width: min(600px, 100%);
 		position: absolute;
 		top: 0;
 		bottom: 0;
@@ -39,7 +39,7 @@
 		z-index: calc(var(--z-index-top) - 1);
 		background: black;
 		color: white;
-		overflow: hidden;
+		overflow: auto;
 
 		h1 {
 			font-size: 6rem;
