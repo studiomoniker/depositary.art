@@ -16,7 +16,7 @@
 
 	onMount(async () => {
 		if (detectIt.primaryInput !== 'touch') return
-		const Impetus = await import('impetus')
+		const { default: Impetus } = await import('impetus')
 
 		impetus = new Impetus({
 			boundY: [0, el.scrollHeight],
