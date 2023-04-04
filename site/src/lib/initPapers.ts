@@ -66,12 +66,10 @@ const calcInitialPaperPositions = (ctx: ThrelteContext) => {
 	let positions: { x: number; y: number }[] = []
 
 	let r = 0
-	// const numCircles = 3;
-	const numCircles = 3
+	const numCircles = import.meta.env.DEV ? 3 : 10
 
 	for (let i = 0; i < numCircles; i++) {
 		const numPapers = i === 0 ? 1 : Math.round(2 * r * Math.PI * 0.6)
-		// const numPapers = 1;
 		const angle = (2 * Math.PI) / numPapers
 		const offset = Math.random() * Math.PI
 		for (let j = 0; j < numPapers; j++) {
