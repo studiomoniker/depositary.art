@@ -8,6 +8,8 @@
 	import type PaperController from './PaperController'
 	import PaperMesh from './PaperMesh.svelte'
 
+	const DISABLE_FLOAT = true
+
 	export let paper: PaperController
 
 	let t = Math.random() * 10000
@@ -47,8 +49,9 @@
 	onDestroy(
 		pointer.subscribe(({ x, y }) => {
 			if (!selected) return
-			rotationX.set(-y * maxOffset)
-			rotationY.set(x * maxOffset)
+
+			rotationX.set(map(y, 0, 1, -0.5, 0.5) * maxOffset)
+			rotationY.set(map(x, 0, 1, -0.5, 0.5) * maxOffset)
 		})
 	)
 
@@ -64,20 +67,21 @@
 		const yOffset =
 			map(Math.sin((t / 4) * speed) / 10, -0.1, 0.1, ...floatingRange) * floatIntensity * i
 
+		const rX = DISABLE_FLOAT ? $rotation.x : $rotation.x + rotationOffsetX - $rotationX
+		const rY = DISABLE_FLOAT ? 0 : rotationOffsetY - $rotationY
+		const rZ = DISABLE_FLOAT ? $rotation.z : $rotation.z + rotationOffsetZ
+		const pY = DISABLE_FLOAT ? $position.y : $position.y + yOffset
+
 		combinedRotation = {
-			x: $rotation.x + rotationOffsetX - $rotationX,
-			y: rotationOffsetY - $rotationY,
-			z: $rotation.z + rotationOffsetZ
-			// x: $rotation.x,
-			// y: 0,
-			// z: $rotation.z
+			x: rX,
+			y: rY,
+			z: rZ
 		}
 
 		combinedPosition = {
 			...$position,
 			z: $z,
-			y: $position.y + yOffset
-			// y: $position.y // disable float
+			y: pY
 		}
 	})
 
