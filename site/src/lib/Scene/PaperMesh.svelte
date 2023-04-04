@@ -28,9 +28,13 @@
 	bind:ref={mesh}
 	castShadow={$opacity >= 1}
 	receiveShadow
-	on:pointerenter={(e) => paper.onMouseOver()}
+	on:pointerenter={(e) => {
+		e.stopPropagation()
+		paper.onMouseOver()
+	}}
 	on:pointerleave={() => paper.onMouseOut()}
 	on:pointerdown={(e) => {
+		e.stopPropagation()
 		startPosition = new Vector3().copy(e.point)
 		paper.startDrag(mesh)
 	}}
