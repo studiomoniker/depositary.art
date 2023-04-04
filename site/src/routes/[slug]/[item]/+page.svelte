@@ -3,23 +3,23 @@
 	import { page } from '$app/stores'
 	import type PaperController from '$lib/Scene/PaperController'
 	import { onDestroy, onMount } from 'svelte'
-
-	import { papers } from '../../../store'
+	import { useInteractivity } from '@threlte/extras'
+	import { clickedPaperMesh, papers, selectedPaper } from '../../../store'
 
 	let paper: PaperController | undefined
 
-	onMount(() => {
-		paper = $papers.find((p) => p.metadata.id === $page.params.item)
-		if (paper) paper.select()
-	})
+	// onMount(() => {
+	// 	paper = $papers.find((p) => p.metadata.id === $page.params.item)
+	// 	if (!$clickedPaperMesh) paper?.select()
+	// })
 
-	onDestroy(() => {
-		if (paper) paper.deselect()
-	})
+	// onDestroy(() => {
+	// 	paper?.deselect()
+	// })
 
-	afterNavigate(() => {
-		if (paper) paper.deselect()
-		paper = $papers.find((p) => p.metadata.id === $page.params.item)
-		if (paper) paper.select()
-	})
+	// afterNavigate(() => {
+	// 	if (paper?.isSelected) paper.deselect()
+	// 	paper = $papers.find((p) => p.metadata.id === $page.params.item)
+	// 	if (!$clickedPaperMesh) paper?.select()
+	// })
 </script>
