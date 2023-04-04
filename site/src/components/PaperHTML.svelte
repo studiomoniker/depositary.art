@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Impetus from 'impetus'
 	import { onDestroy, onMount } from 'svelte'
 	import type PaperController from '../lib/Scene/PaperController'
 	import PaperContent from './PaperContent.svelte'
@@ -15,9 +14,9 @@
 	const height = SIZE
 	const width = paper.isPortrait ? paper.ratio * SIZE : (1 / paper.ratio) * SIZE
 
-	onMount(() => {
+	onMount(async () => {
 		if (detectIt.primaryInput !== 'touch') return
-		if (!browser) return
+		const Impetus = await import('impetus')
 
 		impetus = new Impetus({
 			boundY: [0, el.scrollHeight],
