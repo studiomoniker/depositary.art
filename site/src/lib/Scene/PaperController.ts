@@ -4,7 +4,7 @@ import type { ThrelteContext } from '@threlte/core'
 import { cubicOut, sineInOut } from 'svelte/easing'
 import { spring, tweened } from 'svelte/motion'
 import { get, writable } from 'svelte/store'
-import { Mesh, Texture, TextureLoader, Vector2, Vector3 } from 'three'
+import { Mesh, sRGBEncoding, Texture, TextureLoader, Vector2 } from 'three'
 import { PAPER_THICKNESS } from '../../settings'
 import { draggingPaperMesh, papers, selectedPaper } from '../../store'
 import { getStartPosition } from '../utils/getStartPosition'
@@ -97,6 +97,7 @@ class PaperController {
 		}
 
 		this.texture = new TextureLoader().load(textureUrl, () => {
+			this.texture.encoding = sRGBEncoding
 			// calcuate size of paper based on image
 			this.ratio = this.texture.image.naturalWidth / this.texture.image.naturalHeight
 			const max = 2.5
