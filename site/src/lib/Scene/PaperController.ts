@@ -1,3 +1,4 @@
+import { insertRandomItem } from '$lib/initPapers'
 import type { ArchiveItem } from '$lib/types'
 import { gotoCurrentArchive, gotoItemSlug } from '$lib/utils/gotoHelpers'
 import type { ThrelteContext } from '@threlte/core'
@@ -317,34 +318,25 @@ class PaperController {
 			return
 		}
 
-		newPapers.sort((a, b) => {
-			return a.order - b.order
-		})
-
-		const bottomPaper = newPapers.filter((p) => p !== this && p.active)
-
 		const oldOrder = this.order
+		this.setOrder(newPapers.length - 1)
+
+		newPapers.sort((a, b) => a.order - b.order)
+		const bottomPaper = newPapers.filter((p) => p !== this && p.active).at(0)
+
 		newPapers.forEach((p) => {
+			let newOrder = bottomPaper ? p.order - 1 : p.order
+
 			if (p !== this && p.order > oldOrder) {
-				p.setOrder(p.order - 1)
+				newOrder--
 			}
+			p.setOrder(newOrder)
 		})
 
 		if (bottomPaper) {
-			// bottomPaper.fadeOut();
-			// const newPaper = createPaper({
-			// 	...getRandomPaperPosition(get(this.threlte.camera)),
-			// 	order: newPapers.length - 2,
-			// 	texture: Math.floor(Math.random() * 29),
-			// 	threlte: this.threlte
-			// });
-			// newPapers.push(newPaper);
+			bottomPaper.fadeOut()
+			insertRandomItem(this.threlte, get(bottomPaper.xy))
 		}
-
-		if (newPapers.length > 1) {
-			this.setOrder(newPapers.length - 1)
-		}
-		// papers.update((items) => {})
 	}
 }
 

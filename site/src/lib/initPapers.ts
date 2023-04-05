@@ -1,10 +1,11 @@
 import { page } from '$app/stores'
+import { uuid4 } from '@sentry/utils'
 import type { ThrelteContext } from '@threlte/core'
-import { shuffle } from 'lodash'
+import { sample, shuffle } from 'lodash'
 import { get } from 'svelte/store'
 import { Camera, Vector3 } from 'three'
 import { randFloat } from 'three/src/math/MathUtils'
-import { papers } from '../store'
+import { archiveItems, papers } from '../store'
 import PaperController from './Scene/PaperController'
 import type { ArchiveItem } from './types'
 import { getUnprojectedPosition } from './utils/getUnprojectedPosition'
@@ -153,6 +154,29 @@ export const createPapersFromItems = (ctx: ThrelteContext, items: ArchiveItem[])
 				items.push(p)
 				return items
 			})
+		})
+	})
+}
+
+export const insertRandomItem = (ctx: ThrelteContext, position?: { x: number; y: number }) => {
+	const currentPapers = get(papers)
+	const { x, y } = position ?? getRandomPaperPosition(get(ctx.camera))
+
+	const item = sample(get(archiveItems))
+	if (!item) throw new Error('Can not pick random item')
+
+	createPaper({
+		id: uuid4(),
+		x,
+		y,
+		order: currentPapers.length,
+		threlte: ctx,
+		item,
+		selected: false
+	}).then((p) => {
+		papers.update((items) => {
+			items.push(p)
+			return items
 		})
 	})
 }

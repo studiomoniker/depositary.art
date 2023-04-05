@@ -1,3 +1,4 @@
+import type { ArchiveBySlug$result } from '$houdini'
 import type PaperController from '$lib/Scene/PaperController'
 import { persisted } from 'svelte-local-storage-store'
 import { writable } from 'svelte/store'
@@ -26,3 +27,7 @@ export const preferences = persisted('preferences', {
 	muted: false
 })
 export const hasAudioStarted = writable<boolean>(false)
+
+export const archiveItems = writable<
+	ArchiveBySlug$result['archives'][0]['items'] | undefined | null
+>(null)

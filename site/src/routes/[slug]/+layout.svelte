@@ -6,12 +6,23 @@
 	import { page } from '$app/stores'
 	import ArchiveView from '../../components/ArchiveView.svelte'
 	import IconButton from '../../components/buttons/IconButton.svelte'
-	import { pointer, preferences } from '../../store'
+	import { archiveItems, pointer, preferences } from '../../store'
 	import type { LayoutData } from './$houdini'
+	import type { ArchiveBySlug$result } from '$houdini'
 
 	export let data: LayoutData
 
 	$: ({ ArchiveBySlug } = data)
+	$: updateArchiveItemsStore($ArchiveBySlug.data)
+
+	const updateArchiveItemsStore = (data: ArchiveBySlug$result | null) => {
+		if (!browser) return
+		let items = null
+		if (data?.archives?.at(0)?.items) {
+			items = data.archives.at(0)!.items
+		}
+		$archiveItems = items
+	}
 
 	const toggleMute = () => ($preferences.muted = !$preferences.muted)
 
