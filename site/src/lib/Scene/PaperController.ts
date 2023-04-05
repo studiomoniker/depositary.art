@@ -58,11 +58,9 @@ class PaperController {
 	isDragging = false
 	isPortrait = false
 
-	// xy: Spring<{ x: number; y: number }>;
-	xy = writable({ x: 0, y: 0 })
-	spawnPosition = new Vector2()
-	// currentPosition = new Vector3()
-	// compensatedPosition = writable({ x: 0, y: 0 })
+	// start paper off screen
+	xy = writable({ x: -100, y: -100 })
+	spawnPosition = new Vector2(-100, -100)
 
 	rotation = writable({ x: 0, z: Math.random() * Math.PI })
 	lastSelected = Date.now()
