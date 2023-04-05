@@ -300,7 +300,7 @@ class PaperController {
 	setOrder(order: number) {
 		this.order = order
 		this.zIndex = calcZ(order)
-		if (this.z && !this.isSelected) this.z.set(this.zIndex)
+		if (this.z && !this.isSelected && !this.isDragging) this.z.set(this.zIndex)
 	}
 
 	fadeOut() {
