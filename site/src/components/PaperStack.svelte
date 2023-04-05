@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { Canvas, type ThrelteContext } from '@threlte/core'
-	import { LinearSRGBColorSpace, NoToneMapping } from 'three'
 	import { createPapersFromItems } from '$lib/initPapers'
 	import Scene from '$lib/Scene/Scene.svelte'
 	import type { ArchiveItem } from '$lib/types'
+	import { Canvas, type ThrelteContext } from '@threlte/core'
 	import { onMount } from 'svelte'
+	import { NoToneMapping, SRGBColorSpace } from 'three'
 	import { papers } from '../store'
 
 	export let items: ArchiveItem[]
@@ -16,12 +16,7 @@
 	})
 </script>
 
-<Canvas
-	shadows={true}
-	bind:ctx={three}
-	colorSpace={LinearSRGBColorSpace}
-	toneMapping={NoToneMapping}
->
+<Canvas shadows={true} bind:ctx={three} colorSpace={SRGBColorSpace} toneMapping={NoToneMapping}>
 	<Scene />
 </Canvas>
 
