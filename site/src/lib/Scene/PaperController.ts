@@ -8,7 +8,7 @@ import { cubicOut, sineInOut } from 'svelte/easing'
 import { spring, tweened } from 'svelte/motion'
 import { get, writable } from 'svelte/store'
 import { Mesh, sRGBEncoding, Texture, TextureLoader, Vector2 } from 'three'
-import { PAPER_THICKNESS } from '../../settings'
+import { PAPER_THICKNESS, SCALE } from '../../settings'
 import { draggingPaperMesh, papers, selectedPaper } from '../../store'
 import { getStartPosition } from '../utils/getStartPosition'
 import PaperDragAnimation from './PaperDragAnimation'
@@ -101,7 +101,7 @@ class PaperController {
 			this.texture.encoding = sRGBEncoding
 			// calcuate size of paper based on image
 			this.ratio = this.texture.image.naturalWidth / this.texture.image.naturalHeight
-			const max = 2.5
+			const max = 2.5 * SCALE
 			let w, h
 			if (this.ratio >= 1.0) {
 				w = max

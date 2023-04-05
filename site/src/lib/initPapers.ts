@@ -5,6 +5,7 @@ import { random, sample, shuffle } from 'lodash'
 import { get } from 'svelte/store'
 import { Camera, Vector3 } from 'three'
 import { randFloat } from 'three/src/math/MathUtils'
+import { SCALE } from '../settings'
 import { archiveItems, papers } from '../store'
 import PaperController from './Scene/PaperController'
 import type { ArchiveItem } from './types'
@@ -80,7 +81,7 @@ const calcInitialPaperPositions = (ctx: ThrelteContext) => {
 			}
 		}
 
-		r += 1
+		r += 1 * SCALE
 	}
 
 	positions = shuffle(positions)

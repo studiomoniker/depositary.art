@@ -3,7 +3,7 @@
 	import { HTML, useTexture } from '@threlte/extras'
 	import { BackSide, DoubleSide, FrontSide, Vector3, type Mesh } from 'three'
 	import PaperHTML from '../../components/PaperHTML.svelte'
-	import { PAPER_THICKNESS } from '../../settings'
+	import { PAPER_THICKNESS, SCALE } from '../../settings'
 	import type PaperController from './PaperController'
 
 	export let paper: PaperController
@@ -65,7 +65,7 @@
 				<HTML
 					{portal}
 					transform
-					distanceFactor={1}
+					distanceFactor={1 * SCALE}
 					rotation.x={Math.PI}
 					rotation.z={paper.isPortrait ? 0 : Math.PI / 2}
 				>
