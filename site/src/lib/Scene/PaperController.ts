@@ -46,7 +46,7 @@ class PaperController {
 	dragger
 	selector
 	mesh?: Mesh
-	active = false
+	active = true
 	metadata
 	threlte
 	texture: Texture
