@@ -16,7 +16,7 @@
 	style="--vibrant: {vibrantColor}; --light-muted: {lightMutedColor}; --dark-muted: {darkVibrantColor}; opacity: {$textOpacity};"
 >
 	<div class="button-container">
-		<IconButton type="close" inverted on:click={() => paper.onClick()} class="close-button" />
+		<IconButton type="close" on:click={() => paper.onClick()} class="close-button" />
 	</div>
 
 	<h1>{title}</h1>

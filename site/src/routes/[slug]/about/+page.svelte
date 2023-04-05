@@ -19,7 +19,7 @@
 
 <div class="about-page" transition:fly={{ x: -600, opacity: 1, duration: 500 }}>
 	<div class="close-button">
-		<IconButton type="close" on:click={() => gotoCurrentArchive()} />
+		<IconButton type="close" inverted on:click={() => gotoCurrentArchive()} />
 	</div>
 	<div class="about-content">
 		<h1>About</h1>
@@ -47,8 +47,10 @@
 
 		.close-button {
 			position: absolute;
-			right: 1rem;
-			top: 1rem;
+			height: 3em;
+			width: 3em;
+			right: 0.75em;
+			top: 0.75em;
 		}
 	}
 

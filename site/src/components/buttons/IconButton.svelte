@@ -54,10 +54,20 @@
 		--background-color: #000;
 		--text-color: #fff;
 
+		&.button-close {
+			--background-color: #fff;
+			--text-color: #000;
+		}
+
 		@media (hover: hover) {
 			&:hover {
 				--background-color: #fff;
 				--text-color: #000;
+
+				&.button-close {
+					--background-color: #000;
+					--text-color: #fff;
+				}
 			}
 		}
 
@@ -65,10 +75,20 @@
 			--background-color: #fff;
 			--text-color: #000;
 
+			&.button-close {
+				--background-color: #000;
+				--text-color: #fff;
+			}
+
 			@media (hover: hover) {
 				&:hover {
 					--background-color: #000;
 					--text-color: #fff;
+
+					&.button-close {
+						--background-color: #fff;
+						--text-color: #000;
+					}
 				}
 			}
 		}
