@@ -22,9 +22,9 @@
 
 	$: {
 		if ($preferences.muted) {
-			sound.fade(1, 0, 500)
+			sound.fade(sound.volume(), 0, 500)
 		} else {
-			sound.fade(0, 1, 500)
+			sound.fade(sound.volume(), 1, 500)
 		}
 	}
 </script>
