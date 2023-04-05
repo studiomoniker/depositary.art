@@ -44,7 +44,7 @@ class PaperController {
 	dragger
 	selector
 	mesh?: Mesh
-	active = true
+	active = false
 	metadata
 	threlte
 	texture: Texture
@@ -79,8 +79,8 @@ class PaperController {
 
 	constructor(
 		data: PaperData & {
-			onload: () => void
-			onerror: (err: Error) => void
+			onload?: () => void
+			onerror?: (err: Error) => void
 		},
 		ctx: ThrelteContext
 	) {
@@ -144,7 +144,7 @@ class PaperController {
 				setTimeout(() => this.select(), 10)
 			}
 
-			data.onload()
+			if (data.onload) data.onload()
 		})
 
 		this.order = data.order
@@ -258,6 +258,7 @@ class PaperController {
 	}
 
 	async select() {
+		if (!this.active) return
 		this.isSelected = true
 		selectedPaper.set(this)
 
@@ -281,6 +282,8 @@ class PaperController {
 	}
 
 	async onClick() {
+		if (!this.active) return
+
 		const current = get(selectedPaper)
 		if (current?.metadata.id === this.metadata.id && current?.id !== this.id) return
 
@@ -297,7 +300,7 @@ class PaperController {
 	setOrder(order: number) {
 		this.order = order
 		this.zIndex = calcZ(order)
-		if (this.z) this.z.set(this.zIndex)
+		if (this.z && !this.isSelected) this.z.set(this.zIndex)
 	}
 
 	fadeOut() {
