@@ -4,7 +4,7 @@
 
 	import { DirectionalLight } from 'three'
 	import { INITIAL_CAMERA_POSITION, INITIAL_CAMERA_ZOOM } from '../../settings'
-	import { cameraControls, draggingPaperMesh, enableOrbitControls, papers } from '../../store'
+	import { draggingPaperMesh, papers } from '../../store'
 	import ControlPoint from './ControlPoint.svelte'
 	import NewPaper from './Paper.svelte'
 
@@ -59,11 +59,7 @@
 		fov={48}
 		near={0.1}
 		far={100}
-	>
-		{#if $enableOrbitControls}
-			<!-- <OrbitControls enableDamping bind:controls target={mesh.position} /> -->
-		{/if}
-	</T.PerspectiveCamera>
+	/>
 {/if}
 
 <T is={light} />

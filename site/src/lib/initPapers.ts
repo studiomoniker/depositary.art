@@ -91,14 +91,14 @@ const calcInitialPaperPositions = (ctx: ThrelteContext) => {
 }
 
 export const initPapers = (ctx: ThrelteContext) => {
-	papers.set([])
 	console.log('create random papers')
+	papers.set([])
 	const positions = calcInitialPaperPositions(ctx)
 
 	// positions = positions.slice(0, 10);
 	positions.forEach(({ x, y }, i) => {
 		const texture = `textures/${i % 29}.jpg`
-		const fakeId = Math.round(Math.random() * 9999999).toString()
+		const fakeId = uuid4()
 		createPaper({
 			id: fakeId,
 			x,
@@ -127,8 +127,8 @@ export const initPapers = (ctx: ThrelteContext) => {
 }
 
 export const createPapersFromItems = (ctx: ThrelteContext, items: ArchiveItem[]) => {
-	papers.set([])
 	console.log('create papers from items')
+	papers.set([])
 	const positions = calcInitialPaperPositions(ctx)
 
 	let createdSelectedPaper = false
@@ -142,7 +142,7 @@ export const createPapersFromItems = (ctx: ThrelteContext, items: ArchiveItem[])
 		if (selected) createdSelectedPaper = true
 
 		createPaper({
-			id: Math.round(Math.random() * 9999999).toString(),
+			id: uuid4(),
 			x,
 			y,
 			order: i,
