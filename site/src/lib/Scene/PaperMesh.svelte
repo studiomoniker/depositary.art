@@ -16,6 +16,7 @@
 	$: textOpacity = paper.textOpacity
 
 	let startPosition: Vector3 | null = null
+	const portal = document.querySelector('.portal')! as HTMLDivElement
 </script>
 
 <svelte:window
@@ -60,9 +61,9 @@
 				normalMap={value}
 				normalScale={1.2}
 			/>
-			<!-- <T.MeshPhongMaterial side={DoubleSide} shininess={60} /> -->
 			{#if $textOpacity > 0}
 				<HTML
+					{portal}
 					transform
 					distanceFactor={1}
 					rotation.x={Math.PI}
