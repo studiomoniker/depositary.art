@@ -10,7 +10,7 @@ import PaperController from './Scene/PaperController'
 import type { ArchiveItem } from './types'
 import { getUnprojectedPosition } from './utils/getUnprojectedPosition'
 
-export const createPaper = async ({
+export const createPaper = ({
 	id,
 	x,
 	y,
@@ -26,23 +26,18 @@ export const createPaper = async ({
 	threlte: ThrelteContext
 	item: ArchiveItem
 	selected: boolean
-}): Promise<PaperController> => {
-	return new Promise((resolve, reject) => {
-		const p: PaperController = new PaperController(
-			{
-				id,
-				x,
-				y,
-				order: order,
-				metadata: item,
-				selected,
-				onload: () => resolve(p),
-				onerror: (error) => reject(error)
-			},
-			threlte
-		)
-	})
-}
+}) =>
+	new PaperController(
+		{
+			id,
+			x,
+			y,
+			order: order,
+			metadata: item,
+			selected
+		},
+		threlte
+	)
 
 export const getRandomPaperPosition = (camera: Camera) => {
 	// get camera bounding box
@@ -92,14 +87,13 @@ const calcInitialPaperPositions = (ctx: ThrelteContext) => {
 
 export const initPapers = (ctx: ThrelteContext) => {
 	console.log('create random papers')
-	papers.set([])
 	const positions = calcInitialPaperPositions(ctx)
 
-	// positions = positions.slice(0, 10);
+	const newPapers: PaperController[] = []
 	positions.forEach(({ x, y }, i) => {
 		const texture = `textures/${i % 29}.jpg`
 		const fakeId = uuid4()
-		createPaper({
+		const p = createPaper({
 			id: fakeId,
 			x,
 			y,
@@ -117,23 +111,22 @@ export const initPapers = (ctx: ThrelteContext) => {
 				}
 			},
 			selected: false
-		}).then((p) => {
-			papers.update((items) => {
-				items.push(p)
-				return items
-			})
 		})
+
+		newPapers.push(p)
 	})
+
+	papers.set(newPapers)
 }
 
 export const createPapersFromItems = (ctx: ThrelteContext, items: ArchiveItem[]) => {
 	console.log('create papers from items')
-	papers.set([])
-	const positions = calcInitialPaperPositions(ctx)
+	const newPapers: PaperController[] = []
 
 	let createdSelectedPaper = false
 	const selectedItemId = get(page).params.item
 
+	const positions = calcInitialPaperPositions(ctx)
 	positions.forEach(({ x, y }, i) => {
 		const item = items[i % items.length]
 		if (!item.image) return
@@ -141,7 +134,7 @@ export const createPapersFromItems = (ctx: ThrelteContext, items: ArchiveItem[])
 		const selected = !createdSelectedPaper && selectedItemId === item.id
 		if (selected) createdSelectedPaper = true
 
-		createPaper({
+		const p = createPaper({
 			id: uuid4(),
 			x,
 			y,
@@ -149,34 +142,32 @@ export const createPapersFromItems = (ctx: ThrelteContext, items: ArchiveItem[])
 			threlte: ctx,
 			item,
 			selected
-		}).then((p) => {
-			papers.update((items) => {
-				items.push(p)
-				return items
-			})
 		})
+		newPapers.push(p)
 	})
+
+	papers.set(newPapers)
 }
 
 export const insertRandomItem = (ctx: ThrelteContext, position?: { x: number; y: number }) => {
-	const currentPapers = get(papers)
 	const { x, y } = position ?? getRandomPaperPosition(get(ctx.camera))
 
 	const item = sample(get(archiveItems))
 	if (!item) throw new Error('Can not pick random item')
 
-	createPaper({
+	const p = createPaper({
 		id: uuid4(),
 		x,
 		y,
-		order: currentPapers.length,
+		order: -9999,
 		threlte: ctx,
 		item,
 		selected: false
-	}).then((p) => {
-		papers.update((items) => {
-			items.push(p)
-			return items
-		})
+	})
+
+	papers.update((items) => {
+		OrderManager.addPaper(p)
+		items.push(p)
+		return items
 	})
 }
