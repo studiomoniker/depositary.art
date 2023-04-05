@@ -321,12 +321,12 @@ class PaperController {
 			return a.order - b.order
 		})
 
-		const bottomPaper = newPapers.filter((p) => p !== this && p.active).shift()
+		const bottomPaper = newPapers.filter((p) => p !== this && p.active)
 
+		const oldOrder = this.order
 		newPapers.forEach((p) => {
-			if (p !== this) {
-				const subtract = p.order > this.order ? 2 : 1
-				p.setOrder(p.order - subtract)
+			if (p !== this && p.order > oldOrder) {
+				p.setOrder(p.order - 1)
 			}
 		})
 
@@ -342,9 +342,9 @@ class PaperController {
 		}
 
 		if (newPapers.length > 1) {
-			this.setOrder(newPapers.length - 2)
+			this.setOrder(newPapers.length - 1)
 		}
-		// papers.set(newPapers);
+		// papers.update((items) => {})
 	}
 }
 
