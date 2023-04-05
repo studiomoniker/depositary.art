@@ -50,19 +50,14 @@
 		width: 100%;
 		height: 100%;
 		padding: 0;
-		transition: transform ease-out 250ms;
 
 		--background-color: #000;
 		--text-color: #fff;
 
 		@media (hover: hover) {
-			&:hover:not(.button-close) {
+			&:hover {
 				--background-color: #fff;
 				--text-color: #000;
-			}
-
-			&:hover.button-close {
-				transform: rotateZ(90deg);
 			}
 		}
 
@@ -71,7 +66,7 @@
 			--text-color: #000;
 
 			@media (hover: hover) {
-				&:hover:not(.button-close) {
+				&:hover {
 					--background-color: #000;
 					--text-color: #fff;
 				}
