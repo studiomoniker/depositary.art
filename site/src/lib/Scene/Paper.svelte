@@ -18,8 +18,8 @@
 
 	let speed = 1
 	let rotationIntensity = 0.5
-	let floatIntensity = 1
-	let floatingRange: [number, number] = [-0.1, 0.1]
+	let floatIntensity = 0.5
+	let floatingRange: [number, number] = [-0.05, 0.05]
 
 	$: scale = paper.scale
 	$: z = paper.z
@@ -42,7 +42,7 @@
 	}
 
 	// TODO: this should probably be somewhere in the PaperController
-	const maxOffset = 0.25
+	const maxOffset = 0.1
 	const rotationY = spring(0, { precision: 0.0001, stiffness: 0.05 })
 	const rotationX = spring(0, { precision: 0.0001, stiffness: 0.05 })
 
