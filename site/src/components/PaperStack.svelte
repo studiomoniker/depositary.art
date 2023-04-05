@@ -1,20 +1,43 @@
 <script lang="ts">
-	import { createPapersFromItems } from '$lib/initPapers'
+	import { createPapersFromItems, replaceBottomPaper } from '$lib/initPapers'
 	import Scene from '$lib/Scene/Scene.svelte'
 	import type { ArchiveItem } from '$lib/types'
 	import { Canvas, type ThrelteContext } from '@threlte/core'
-	import { onMount } from 'svelte'
+	import { random } from 'lodash'
+	import { onDestroy, onMount } from 'svelte'
 	import { NoToneMapping, SRGBColorSpace } from 'three'
-	import { papers } from '../store'
+	import { lastActivity, papers } from '../store'
 
 	export let items: ArchiveItem[]
 
 	let three: ThrelteContext
 
+	let timeout: NodeJS.Timeout
+
 	onMount(() => {
 		createPapersFromItems(three, items)
 	})
+
+	const createPaperTimeout = () => {
+		timeout = setTimeout(() => {
+			replaceBottomPaper(three)
+			createPaperTimeout()
+		}, random(5000, 8000))
+	}
+
+	onDestroy(
+		lastActivity.subscribe(() => {
+			if (timeout) clearTimeout(timeout)
+			createPaperTimeout()
+		})
+	)
+
+	const cancelTimeout = () => {
+		if (timeout) clearTimeout(timeout)
+	}
 </script>
+
+<svelte:window on:visibilitychange={cancelTimeout} />
 
 <Canvas shadows={true} bind:ctx={three} colorSpace={SRGBColorSpace} toneMapping={NoToneMapping}>
 	<Scene />

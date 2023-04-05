@@ -26,3 +26,5 @@ export const hasAudioStarted = writable<boolean>(false)
 export const archiveItems = writable<
 	ArchiveBySlug$result['archives'][0]['items'] | undefined | null
 >(null)
+
+export const lastActivity = writable(Date.now())

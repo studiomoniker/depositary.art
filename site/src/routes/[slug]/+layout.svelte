@@ -6,7 +6,7 @@
 	import { page } from '$app/stores'
 	import ArchiveView from '../../components/ArchiveView.svelte'
 	import IconButton from '../../components/buttons/IconButton.svelte'
-	import { archiveItems, pointer, preferences } from '../../store'
+	import { archiveItems, lastActivity, pointer, preferences } from '../../store'
 	import type { LayoutData } from './$houdini'
 	import type { ArchiveBySlug$result } from '$houdini'
 
@@ -28,6 +28,7 @@
 
 	const updateMousePosition = (e: MouseEvent) => {
 		if (!browser) return
+		updateActivity()
 
 		// x: left to right, 0 - 1
 		// y: top to bottom, 0 - 1
@@ -36,9 +37,11 @@
 
 		$pointer = { x, y }
 	}
+
+	const updateActivity = () => ($lastActivity = Date.now())
 </script>
 
-<svelte:window on:pointermove={updateMousePosition} />
+<svelte:window on:pointermove={updateMousePosition} on:pointerdown={updateActivity} />
 
 <div class="buttons">
 	<IconButton type={$preferences.muted ? 'unmute' : 'mute'} on:click={toggleMute} />
