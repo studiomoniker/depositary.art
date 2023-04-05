@@ -1,7 +1,9 @@
 import { insertRandomItem } from '$lib/initPapers'
 import type { ArchiveItem } from '$lib/types'
 import { gotoCurrentArchive, gotoItemSlug } from '$lib/utils/gotoHelpers'
+import OrderManager from '$lib/utils/OrderManager'
 import type { ThrelteContext } from '@threlte/core'
+import { random } from 'lodash'
 import { cubicOut, sineInOut } from 'svelte/easing'
 import { spring, tweened } from 'svelte/motion'
 import { get, writable } from 'svelte/store'
@@ -240,7 +242,7 @@ class PaperController {
 
 		draggingPaperMesh.set(undefined)
 		this.isDragging = false
-		this.moveToTop()
+		this.moveToTop(true)
 	}
 
 	onMouseOver() {
@@ -312,31 +314,15 @@ class PaperController {
 		console.log('removed paper', this.id)
 	}
 
-	moveToTop() {
-		const newPapers = get(papers)
-		if (newPapers.length === 1) {
-			this.setOrder(0)
-			return
-		}
+	moveToTop(replaceBottomPaper = false) {
+		OrderManager.moveToTop(this)
 
-		const oldOrder = this.order
-		this.setOrder(newPapers.length - 1)
-
-		newPapers.sort((a, b) => a.order - b.order)
-		const bottomPaper = newPapers.filter((p) => p !== this && p.active).at(0)
-
-		newPapers.forEach((p) => {
-			let newOrder = bottomPaper ? p.order - 1 : p.order
-
-			if (p !== this && p.order > oldOrder) {
-				newOrder--
+		if (replaceBottomPaper) {
+			const bottomPaper = OrderManager.removeBottomPaper()
+			if (bottomPaper) {
+				setTimeout(() => insertRandomItem(this.threlte, get(bottomPaper.xy)), random(500, 2000))
+				bottomPaper?.fadeOut()
 			}
-			p.setOrder(newOrder)
-		})
-
-		if (bottomPaper) {
-			bottomPaper.fadeOut()
-			insertRandomItem(this.threlte, get(bottomPaper.xy))
 		}
 	}
 }

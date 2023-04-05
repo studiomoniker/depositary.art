@@ -9,6 +9,7 @@ import { archiveItems, papers } from '../store'
 import PaperController from './Scene/PaperController'
 import type { ArchiveItem } from './types'
 import { getUnprojectedPosition } from './utils/getUnprojectedPosition'
+import OrderManager from './utils/OrderManager'
 
 export const createPaper = ({
 	id,
@@ -116,6 +117,7 @@ export const initPapers = (ctx: ThrelteContext) => {
 		newPapers.push(p)
 	})
 
+	OrderManager.setPapers(newPapers)
 	papers.set(newPapers)
 }
 
@@ -146,6 +148,7 @@ export const createPapersFromItems = (ctx: ThrelteContext, items: ArchiveItem[])
 		newPapers.push(p)
 	})
 
+	OrderManager.setPapers(newPapers)
 	papers.set(newPapers)
 }
 
