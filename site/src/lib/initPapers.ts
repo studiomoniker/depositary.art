@@ -1,7 +1,7 @@
 import { page } from '$app/stores'
 import { uuid4 } from '@sentry/utils'
 import type { ThrelteContext } from '@threlte/core'
-import { sample, shuffle } from 'lodash'
+import { random, sample, shuffle } from 'lodash'
 import { get } from 'svelte/store'
 import { Camera, Vector3 } from 'three'
 import { randFloat } from 'three/src/math/MathUtils'
@@ -63,10 +63,11 @@ const calcInitialPaperPositions = (ctx: ThrelteContext) => {
 	let positions: { x: number; y: number }[] = []
 
 	let r = 0
-	const numCircles = import.meta.env.DEV ? 3 : 10
+	const numCircles = import.meta.env.DEV ? 6 : 10
 
 	for (let i = 0; i < numCircles; i++) {
 		const numPapers = i === 0 ? 1 : Math.round(2 * r * Math.PI * 0.6)
+		// const numPapers = 1
 		const angle = (2 * Math.PI) / numPapers
 		const offset = Math.random() * Math.PI
 		for (let j = 0; j < numPapers; j++) {
@@ -173,4 +174,12 @@ export const insertRandomItem = (ctx: ThrelteContext, position?: { x: number; y:
 		items.push(p)
 		return items
 	})
+}
+
+export const replaceBottomPaper = (threlte: ThrelteContext) => {
+	const bottomPaper = OrderManager.removeBottomPaper()
+	if (bottomPaper) {
+		setTimeout(() => insertRandomItem(threlte, get(bottomPaper.xy)), random(500, 2000))
+		bottomPaper?.fadeOut()
+	}
 }

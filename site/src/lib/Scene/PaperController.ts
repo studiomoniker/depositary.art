@@ -1,4 +1,4 @@
-import { insertRandomItem } from '$lib/initPapers'
+import { insertRandomItem, replaceBottomPaper } from '$lib/initPapers'
 import type { ArchiveItem } from '$lib/types'
 import { gotoCurrentArchive, gotoItemSlug } from '$lib/utils/gotoHelpers'
 import OrderManager from '$lib/utils/OrderManager'
@@ -314,16 +314,10 @@ class PaperController {
 		console.log('removed paper', this.id)
 	}
 
-	moveToTop(replaceBottomPaper = false) {
+	moveToTop(shouldReplaceBottomPaper = false) {
 		OrderManager.moveToTop(this)
 
-		if (replaceBottomPaper) {
-			const bottomPaper = OrderManager.removeBottomPaper()
-			if (bottomPaper) {
-				setTimeout(() => insertRandomItem(this.threlte, get(bottomPaper.xy)), random(500, 2000))
-				bottomPaper?.fadeOut()
-			}
-		}
+		if (shouldReplaceBottomPaper) replaceBottomPaper(this.threlte)
 	}
 }
 
