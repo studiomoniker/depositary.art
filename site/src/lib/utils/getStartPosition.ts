@@ -38,6 +38,6 @@ export const getStartPosition = (position: Vector2, camera: Camera) => {
 	// 		break;
 	// }
 
-	randomPositionOnEdge.multiplyScalar(5)
+	randomPositionOnEdge.multiplyScalar(15)
 	return { x: randomPositionOnEdge.x, y: randomPositionOnEdge.y }
 }
