@@ -21,6 +21,4 @@
 
 	<h1>{title}</h1>
 	{@html description}
-	<h2 style="margin: 5em 0 1em">More description to test scrolling</h2>
-	{@html description}
 </div>
