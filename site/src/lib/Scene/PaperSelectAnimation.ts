@@ -25,7 +25,7 @@ class PaperSelectAnimation {
 			z: 0,
 			scale: 1
 		},
-		{ duration: 500, easing: cubicInOut }
+		{ duration: 650, easing: cubicInOut }
 	)
 	prevState: AnimationState
 
@@ -59,10 +59,6 @@ class PaperSelectAnimation {
 		const h = this.paper.isPortrait ? this.paper.size[1] : this.paper.size[0]
 		const paperAspect = w / h
 
-		const max = Math.max(
-			this.paper.threlte.renderer?.domElement.clientHeight ?? 0,
-			this.paper.threlte.renderer?.domElement.clientWidth ?? 0
-		)
 		const min = Math.min(
 			this.paper.threlte.renderer?.domElement.clientHeight ?? 0,
 			this.paper.threlte.renderer?.domElement.clientWidth ?? 0
