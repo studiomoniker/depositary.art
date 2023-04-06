@@ -326,7 +326,6 @@ class PaperController {
 
 	remove() {
 		papers.update((items) => items.filter((p) => p !== this))
-		console.log('removed paper', this.id)
 	}
 
 	moveToTop(shouldReplaceBottomPaper = false) {
