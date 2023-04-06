@@ -16,6 +16,7 @@ type Query {
   archives(filter: archives_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [archives!]!
   archives_aggregated(filter: archives_filter, groupBy: [String], limit: Int, offset: Int, page: Int, search: String, sort: [String]): [archives_aggregated!]!
   archives_by_id(id: ID!): archives
+  homepage: homepage
   items(filter: items_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [items!]!
   items_aggregated(filter: items_filter, groupBy: [String], limit: Int, offset: Int, page: Int, search: String, sort: [String]): [items_aggregated!]!
   items_by_id(id: ID!): items
@@ -170,6 +171,11 @@ input directus_files_filter {
   uploaded_on: date_filter_operators
   uploaded_on_func: datetime_function_filter_operators
   width: number_filter_operators
+}
+
+type homepage {
+  archive(filter: archives_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): archives
+  id: ID!
 }
 
 type items {
