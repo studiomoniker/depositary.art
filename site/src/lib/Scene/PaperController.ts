@@ -63,7 +63,7 @@ class PaperController {
 	xy = writable({ x: -100, y: -100 })
 	spawnPosition = new Vector2(-100, -100)
 
-	rotation = writable({ x: 0, z: Math.random() * Math.PI })
+	rotation = writable({ x: 0, z: Math.PI + Math.random() * Math.PI * 2 })
 	lastSelected = Date.now()
 
 	order = 0
@@ -126,15 +126,31 @@ class PaperController {
 					this.hasTexture = true
 					if (data.selected) return
 
-					const t = spring(startPosition, {
-						stiffness: 0.05,
-						damping: 0.6,
-						precision: 0.0001
-					})
+					const t = spring(
+						{
+							...startPosition,
+							r: get(this.rotation).z
+						},
+						{
+							stiffness: 0.03,
+							damping: 0.6,
+							precision: 0.0001
+						}
+					)
 					t.subscribe((val) => {
-						if (!this.isDragging && !this.isSelected) this.xy.set(val)
+						if (!this.isDragging && !this.isSelected) {
+							this.xy.set({ x: val.x, y: val.y })
+							this.rotation.update((r) => {
+								r.z = val.r
+								return r
+							})
+						}
 					})
-					t.set({ x: this.spawnPosition.x, y: this.spawnPosition.y })
+					t.set({
+						x: this.spawnPosition.x,
+						y: this.spawnPosition.y,
+						r: Math.random() * Math.PI
+					})
 				},
 				data.selected || import.meta.env.DEV ? 0 : 500 + Math.random() * 3000
 			)
