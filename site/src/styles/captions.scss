@@ -8,6 +8,12 @@
 	font-size: 1.75rem;
 	display: inline-block;
 	filter: drop-shadow(0.5rem 0.5rem 0.2rem rgb(0 0 0 / 0.2));
+	transition: transform cubic-bezier(0.645, 0.045, 0.355, 1) 500ms;
+	transform: translateY(0);
+
+	&.paused {
+		transform: translateY(200px);
+	}
 
 	p {
 		background: var(--text-color);
@@ -21,10 +27,14 @@
 
 	@include breakpoint-lt('md') {
 		font-size: 1.125rem;
-		bottom: 5rem;
+		bottom: 4.5rem;
 
 		p {
 			max-width: 90%;
+		}
+
+		&.paused {
+			transform: translateY(140px);
 		}
 	}
 }

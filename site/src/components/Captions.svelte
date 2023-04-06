@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { balancer } from 'svelte-action-balancer'
 	import { browser } from '$app/environment'
 	import { onDestroy, onMount } from 'svelte'
+	import { balancer } from 'svelte-action-balancer'
 	import { fade } from 'svelte/transition'
+	import { selectedPaper } from '../store'
 
 	const PAUSE = 3000
 
@@ -13,24 +14,39 @@
 	let timeout: NodeJS.Timeout
 
 	$: text = texts[index].text
+	$: paused = !!$selectedPaper
 
-	const cancel = () => {
+	$: {
+		if (paused) {
+			pause()
+		} else {
+			waitForReading()
+		}
+	}
+
+	const pause = () => {
+		if (timeout) clearTimeout(timeout)
+	}
+
+	const onVisibilityChange = () => {
 		if (browser && document.visibilityState === 'visible') {
 			waitForReading()
-		} else if (timeout) {
-			clearTimeout(timeout)
+		} else {
+			pause()
 		}
 	}
 
 	const calculateTime = (text: string) => {
 		const wordCount = text.split(/\s+/).length
-		const WPM = 90
+		const WPM = 85
 		const time = (wordCount / WPM) * 60 * 1000
 
 		return time
 	}
 
 	const waitForReading = () => {
+		if (timeout) clearTimeout(timeout)
+
 		textVisible = true
 		const time = calculateTime(text)
 		timeout = setTimeout(() => {
@@ -49,19 +65,23 @@
 		waitForReading()
 	})
 
-	onDestroy(cancel)
+	onDestroy(pause)
 </script>
 
-<svelte:window on:visibilitychange={cancel} />
+<svelte:window on:visibilitychange={onVisibilityChange} />
 
 {#if textVisible}
 	<div
-		transition:fade={{
+		in:fade={{
 			delay: PAUSE,
+			duration: 0
+		}}
+		out:fade={{
 			duration: 0
 		}}
 		on:outroend={nextLine}
 		class="captions"
+		class:paused
 	>
 		<p use:balancer={{ enabled: true, ratio: 1 }}>
 			{text}
