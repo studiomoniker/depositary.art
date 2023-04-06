@@ -35,7 +35,7 @@ collections:
       color: null
       display_template: null
       group: null
-      hidden: false
+      hidden: true
       icon: null
       item_duplication_fields: null
       note: null
@@ -256,8 +256,9 @@ fields:
     meta:
       collection: archives
       conditions: null
-      display: null
-      display_options: null
+      display: related-values
+      display_options:
+        template: '{{title}}'
       field: items
       group: null
       hidden: false
@@ -510,7 +511,7 @@ fields:
       display_options: null
       field: archive
       group: null
-      hidden: false
+      hidden: true
       interface: select-dropdown-m2o
       note: null
       options:
