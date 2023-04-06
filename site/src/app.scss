@@ -2,6 +2,9 @@
 
 @use 'styles/reset';
 @use 'styles/paper-content';
+@use 'styles/about';
+
+@import 'styles/_mixins';
 
 @font-face {
 	font-family: 'Haben Grotesk';
@@ -41,4 +44,20 @@ em,
 i {
 	font-weight: normal;
 	font-style: normal;
+}
+
+.buttons {
+	position: fixed;
+	z-index: var(--z-index-top);
+	top: 1rem;
+	bottom: auto;
+	right: 1rem;
+	width: 7.75rem;
+	display: flex;
+
+	@include breakpoint-lt('md') {
+		top: auto;
+		bottom: 1rem;
+		width: 5.75rem;
+	}
 }

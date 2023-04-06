@@ -64,10 +64,10 @@
 				--background-color: #fff;
 				--text-color: #000;
 
-				&.button-close {
-					--background-color: #000;
-					--text-color: #fff;
-				}
+				// &.button-close {
+				// 	--background-color: #000;
+				// 	--text-color: #fff;
+				// }
 			}
 		}
 
@@ -85,12 +85,16 @@
 					--background-color: #000;
 					--text-color: #fff;
 
-					&.button-close {
-						--background-color: #fff;
-						--text-color: #000;
-					}
+					// &.button-close {
+					// 	--background-color: #fff;
+					// 	--text-color: #000;
+					// }
 				}
 			}
+		}
+
+		&:not(.button-close) {
+			filter: drop-shadow(0.25rem 0.25rem 0.2rem rgb(0 0 0 / 0.4));
 		}
 
 		svg {

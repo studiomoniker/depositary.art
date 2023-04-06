@@ -1,0 +1,44 @@
+@import '_mixins';
+
+.about-page {
+	font-size: 1.25rem;
+	--width: min(600px, 100%);
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	width: var(--width);
+	z-index: calc(var(--z-index-top) + 1);
+	background: black;
+	color: white;
+	overflow: auto;
+
+	h1 {
+		font-size: 5rem;
+	}
+
+	.close-button {
+		position: absolute;
+		height: 3em;
+		width: 3em;
+		right: 0.75em;
+		top: 0.75em;
+	}
+
+	.about-content {
+		width: var(--width);
+		padding: 1rem 2rem;
+		box-sizing: border-box;
+	}
+
+	@include breakpoint-lt('md') {
+		.close-button {
+			height: 2em;
+			width: 2em;
+		}
+
+		.about-content {
+			padding: 0.75rem 1.5rem;
+		}
+	}
+}

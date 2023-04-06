@@ -14,7 +14,7 @@
 	box-sizing: border-box;
 	font-size: 1.5rem;
 	line-height: 1.4rem;
-	padding: 1.75rem 2rem;
+	padding: 1.75rem 2rem 2rem;
 	color: #111;
 
 	h1 {
@@ -39,17 +39,17 @@
 	}
 
 	@include breakpoint-lt('md') {
-		font-size: 2.5rem;
+		font-size: 2.1rem;
 
 		h1 {
-			font-size: 2.2em;
+			font-size: 2.1em;
 		}
 
 		.button-container {
 			top: 0.5em;
 			right: 0.5em;
-			height: 1.5em;
-			width: 1.5em;
+			height: 2em;
+			width: 2em;
 		}
 	}
 }

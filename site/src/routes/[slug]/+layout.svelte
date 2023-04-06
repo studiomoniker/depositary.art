@@ -65,14 +65,3 @@
 	{/if}
 	<slot />
 </main>
-
-<style>
-	.buttons {
-		position: fixed;
-		z-index: var(--z-index-top);
-		top: 1rem;
-		right: 1rem;
-		width: 7rem;
-		display: flex;
-	}
-</style>
