@@ -3,7 +3,7 @@
 	import Scene from '$lib/Scene/Scene.svelte'
 	import type { ArchiveItem } from '$lib/types'
 	import { Canvas, type ThrelteContext } from '@threlte/core'
-	import { random } from 'lodash'
+	import { random } from 'lodash-es'
 	import { onDestroy, onMount } from 'svelte'
 	import { NoToneMapping, SRGBColorSpace } from 'three'
 	import { lastActivity, papers } from '../store'

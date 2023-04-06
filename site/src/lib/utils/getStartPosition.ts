@@ -1,5 +1,4 @@
-import { sample } from 'lodash'
-import { Camera, Vector2, Vector3 } from 'three'
+import { Camera, Vector2 } from 'three'
 import { randFloat } from 'three/src/math/MathUtils'
 
 // const getUnprojectedPosition = (position: Vector3, camera: Camera) => {

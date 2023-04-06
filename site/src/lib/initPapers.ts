@@ -1,7 +1,7 @@
 import { page } from '$app/stores'
 import { uuid4 } from '@sentry/utils'
 import type { ThrelteContext } from '@threlte/core'
-import { random, sample, shuffle } from 'lodash'
+import { random, sample, shuffle } from 'lodash-es'
 import { get } from 'svelte/store'
 import { Camera, Vector3 } from 'three'
 import { randFloat } from 'three/src/math/MathUtils'
