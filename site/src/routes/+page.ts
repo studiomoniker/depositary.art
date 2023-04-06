@@ -6,7 +6,7 @@ export async function load(event) {
 	const { Homepage } = await load_Homepage({ event })
 
 	const { data } = get(Homepage)
-	if (!data) error('Could not load homepage data')
+	if (!data) error(404, 'Could not load homepage data')
 
 	throw redirect(302, `/${data?.homepage?.archive?.slug}`)
 	return { Homepage }
