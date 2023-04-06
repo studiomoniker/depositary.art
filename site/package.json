@@ -51,6 +51,7 @@
 		"howler": "^2.2.3",
 		"impetus": "^0.8.8",
 		"lodash-es": "^4.17.21",
+		"svelte-action-balancer": "^1.0.4",
 		"svelte-local-storage-store": "^0.4.0",
 		"vite-plugin-glsl": "^1.0.2"
 	}

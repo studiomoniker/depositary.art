@@ -25,6 +25,8 @@ type Query {
 type archives {
   about: String
   audio(filter: directus_files_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): directus_files
+  curatorial_text: JSON
+  curatorial_text_func: count_functions
   id: ID!
   items(filter: items_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [items]
   items_func: count_functions
@@ -48,6 +50,7 @@ type archives_aggregated {
 type archives_aggregated_count {
   about: Int
   audio: Int
+  curatorial_text: Int
   id: Int
   items: Int
   slug: Int
@@ -63,6 +66,8 @@ input archives_filter {
   _or: [archives_filter]
   about: string_filter_operators
   audio: directus_files_filter
+  curatorial_text: string_filter_operators
+  curatorial_text_func: count_function_filter_operators
   id: number_filter_operators
   items: items_filter
   items_func: count_function_filter_operators

@@ -4,6 +4,7 @@ query ArchiveBySlug($slug: String) {
 		audio {
 			id
 		}
+		curatorial_text
 		about
 		items {
 			id

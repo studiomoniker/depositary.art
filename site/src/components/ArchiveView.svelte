@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Archive } from '$lib/types'
 	import AudioPlayer from './AudioPlayer.svelte'
+	import Captions from './Captions.svelte'
 	import PaperStack from './PaperStack.svelte'
 
 	export let archive: Archive
@@ -11,6 +12,8 @@
 <svelte:head>
 	<title>{archive.title}</title>
 </svelte:head>
+
+<Captions texts={archive.curatorial_text} />
 
 <PaperStack {items} />
 
