@@ -63,7 +63,12 @@ class PaperSelectAnimation {
 			this.paper.threlte.renderer?.domElement.clientHeight ?? 0,
 			this.paper.threlte.renderer?.domElement.clientWidth ?? 0
 		)
-		const margin = max < 800 ? 1.1 : 1.25
+		const min = Math.min(
+			this.paper.threlte.renderer?.domElement.clientHeight ?? 0,
+			this.paper.threlte.renderer?.domElement.clientWidth ?? 0
+		)
+
+		const margin = min < 768 ? 1.1 : 1.25
 
 		let z = 0
 		if (paperAspect <= cam.aspect) {
