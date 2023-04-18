@@ -58,7 +58,6 @@ const calcInitialPaperPositions = (ctx: ThrelteContext) => {
 	const topLeft = getUnprojectedPosition(new Vector3(-1, -1, 0), camera).addScalar(-margin)
 	const bottomRight = getUnprojectedPosition(new Vector3(1, 1, 0), camera).addScalar(margin)
 
-	console.log('init papers')
 	let positions: { x: number; y: number }[] = []
 
 	let r = 0
@@ -127,7 +126,8 @@ export const createPapersFromItems = (ctx: ThrelteContext, items: ArchiveItem[])
 	const selectedItemId = get(page).params.item
 
 	const positions = calcInitialPaperPositions(ctx)
-	positions.forEach(({ x, y }, i) => {
+
+	positions.slice(0, items.length).forEach(({ x, y }, i) => {
 		const item = items[i % items.length]
 		if (!item.image) return
 
@@ -152,7 +152,24 @@ export const createPapersFromItems = (ctx: ThrelteContext, items: ArchiveItem[])
 export const insertRandomItem = (ctx: ThrelteContext, position?: { x: number; y: number }) => {
 	const { x, y } = position ?? getRandomPaperPosition(get(ctx.camera))
 
-	const item = sample(get(archiveItems))
+	// we don't want the same image on the screen twice
+	const currentPapers = get(papers)
+	// check what archive items are actually rendered right now
+	const archiveItemsOnScreen = currentPapers.map((p) => p.metadata.id)
+	let options = get(archiveItems)?.filter((i) => i && !archiveItemsOnScreen.includes(i.id))
+
+	// in case all archive items are on the current screen we select the bottom one, or a deactivated one
+	if (options?.length === 0) {
+		const deactivatedPapers = currentPapers.filter((p) => !p.active).map((p) => p.metadata.id)
+		const deactivatedOptions = get(archiveItems)?.filter(
+			(i) => i && deactivatedPapers.includes(i.id)
+		)
+		const bottomPaper = OrderManager.bottomPaper
+		const bottomOption = get(archiveItems)?.filter((i) => bottomPaper?.metadata.id === i?.id)
+		options = deactivatedOptions ?? bottomOption
+	}
+
+	const item = sample(options)
 	if (!item) throw new Error('Can not pick random item')
 
 	const p = createPaper({
