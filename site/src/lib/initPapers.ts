@@ -13,7 +13,6 @@ import { getUnprojectedPosition } from './utils/getUnprojectedPosition'
 import OrderManager from './utils/OrderManager'
 
 export const createPaper = ({
-	id,
 	x,
 	y,
 	order = 0,
@@ -21,7 +20,6 @@ export const createPaper = ({
 	item,
 	selected = false
 }: {
-	id: number | string
 	x: number
 	y: number
 	order?: number
@@ -31,7 +29,7 @@ export const createPaper = ({
 }) =>
 	new PaperController(
 		{
-			id,
+			id: `${item.id}-${uuid4()}`,
 			x,
 			y,
 			order: order,
@@ -95,15 +93,13 @@ export const initPapers = (ctx: ThrelteContext) => {
 	const newPapers: PaperController[] = []
 	positions.forEach(({ x, y }, i) => {
 		const texture = `textures/${i % 29}.jpg`
-		const fakeId = uuid4()
 		const p = createPaper({
-			id: fakeId,
 			x,
 			y,
 			order: i,
 			threlte: ctx,
 			item: {
-				id: fakeId,
+				id: uuid4(),
 				image: {
 					id: texture
 				},
@@ -139,7 +135,6 @@ export const createPapersFromItems = (ctx: ThrelteContext, items: ArchiveItem[])
 		if (selected) createdSelectedPaper = true
 
 		const p = createPaper({
-			id: uuid4(),
 			x,
 			y,
 			order: i,
@@ -161,7 +156,6 @@ export const insertRandomItem = (ctx: ThrelteContext, position?: { x: number; y:
 	if (!item) throw new Error('Can not pick random item')
 
 	const p = createPaper({
-		id: uuid4(),
 		x,
 		y,
 		order: -9999,
