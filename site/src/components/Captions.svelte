@@ -2,7 +2,6 @@
 	import { browser } from '$app/environment'
 	import { onDestroy, onMount } from 'svelte'
 	import { balancer } from 'svelte-action-balancer'
-	import { fade } from 'svelte/transition'
 	import { selectedPaper } from '../store'
 
 	const PAUSE = 3000
@@ -38,10 +37,17 @@
 
 	const calculateTime = (text: string) => {
 		const wordCount = text.split(/\s+/).length
-		const WPM = 85
+		const WPM = 110
 		const time = (wordCount / WPM) * 60 * 1000
 
 		return time
+	}
+
+	const waitForPause = () => {
+		if (timeout) clearTimeout(timeout)
+		timeout = setTimeout(() => {
+			nextLine()
+		}, PAUSE)
 	}
 
 	const waitForReading = () => {
@@ -49,8 +55,10 @@
 
 		textVisible = true
 		const time = calculateTime(text)
+
 		timeout = setTimeout(() => {
 			textVisible = false
+			waitForPause()
 		}, time)
 	}
 
@@ -71,18 +79,7 @@
 <svelte:window on:visibilitychange={onVisibilityChange} />
 
 {#if textVisible}
-	<div
-		in:fade={{
-			delay: PAUSE,
-			duration: 0
-		}}
-		out:fade={{
-			duration: 0
-		}}
-		on:outroend={nextLine}
-		class="captions"
-		class:paused
-	>
+	<div class="captions" class:paused>
 		<p use:balancer={{ enabled: true, ratio: 1 }}>
 			{text}
 		</p>
