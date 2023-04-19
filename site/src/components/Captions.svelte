@@ -2,6 +2,7 @@
 	import { browser } from '$app/environment'
 	import { onDestroy, onMount } from 'svelte'
 	import { balancer } from 'svelte-action-balancer'
+	import { fade } from 'svelte/transition'
 	import { selectedPaper } from '../store'
 
 	const PAUSE = 3000
@@ -9,29 +10,28 @@
 	export let texts: { text: string }[]
 
 	let index = 0
-	let textVisible = false
-	let timeout: NodeJS.Timeout
+	let state: 'PAUSED' | 'READING' = 'PAUSED'
+	let isHidden = false
+	let startTime = Date.now()
+	let time = 0
+	let endTime = PAUSE
 
 	$: text = texts[index].text
-	$: paused = !!$selectedPaper
-
 	$: {
-		if (paused) {
-			pause()
+		if (!!$selectedPaper) {
+			isHidden = true
 		} else {
-			waitForReading()
+			startTime = Date.now()
+			isHidden = false
 		}
-	}
-
-	const pause = () => {
-		if (timeout) clearTimeout(timeout)
 	}
 
 	const onVisibilityChange = () => {
 		if (browser && document.visibilityState === 'visible') {
-			waitForReading()
+			startTime = Date.now()
+			state = 'READING'
 		} else {
-			pause()
+			state = 'PAUSED'
 		}
 	}
 
@@ -43,45 +43,60 @@
 		return time
 	}
 
-	const waitForPause = () => {
-		if (timeout) clearTimeout(timeout)
-		timeout = setTimeout(() => {
-			nextLine()
-		}, PAUSE)
-	}
+	let raf: number
+	const timer = () => {
+		raf = requestAnimationFrame(timer)
+		if (isHidden) return
 
-	const waitForReading = () => {
-		if (timeout) clearTimeout(timeout)
+		const now = Date.now()
 
-		textVisible = true
-		const time = calculateTime(text)
+		time = now - startTime
 
-		timeout = setTimeout(() => {
-			textVisible = false
-			waitForPause()
-		}, time)
-	}
+		if (time > endTime) {
+			startTime = Date.now()
+			time = 0
 
-	const nextLine = () => {
-		index++
-		if (index >= texts.length) index = 0
-		textVisible = true
-		waitForReading()
+			if (state === 'PAUSED') {
+				if (index >= texts.length) index = 0
+
+				state = 'READING'
+				endTime = calculateTime(texts[index].text)
+			} else if (state === 'READING') {
+				state = 'PAUSED'
+				endTime = PAUSE
+				index++
+			}
+		}
 	}
 
 	onMount(() => {
-		waitForReading()
+		timer()
 	})
 
-	onDestroy(pause)
+	onDestroy(() => {
+		if (raf) cancelAnimationFrame(raf)
+	})
 </script>
 
 <svelte:window on:visibilitychange={onVisibilityChange} />
 
-{#if textVisible}
-	<div class="captions" class:paused>
+<!-- <div class="timer">
+	{(time / 1000).toFixed(1)} / {(endTime / 1000).toFixed(1)}
+</div> -->
+
+{#if state !== 'PAUSED'}
+	<div class="captions" class:hidden={isHidden}>
 		<p use:balancer={{ enabled: true, ratio: 1 }}>
 			{text}
 		</p>
 	</div>
 {/if}
+
+<style>
+	/* .timer {
+		background: white;
+		position: absolute;
+		top: 0;
+		left: 0;
+	} */
+</style>

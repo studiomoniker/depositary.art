@@ -11,7 +11,7 @@
 	transition: transform cubic-bezier(0.645, 0.045, 0.355, 1) 500ms;
 	transform: translateY(0);
 
-	&.paused {
+	&.hidden {
 		transform: translateY(200px);
 	}
 
@@ -33,7 +33,7 @@
 			max-width: 90%;
 		}
 
-		&.paused {
+		&.hidden {
 			transform: translateY(140px);
 		}
 	}
