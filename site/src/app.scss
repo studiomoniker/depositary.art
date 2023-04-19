@@ -57,17 +57,23 @@ i {
 	width: 7.75rem;
 	display: flex;
 
+	
+	button {
+		transition: transform 0.4s;	
+		&.hidden {
+			transform: translateY(-1rem) translateY(-100%);
+		}
+	}
+
 	@include breakpoint-lt('md') {
 		top: auto;
 		bottom: 1rem;
 		width: 5.75rem;
-	}
 
-	button {
-		transition: transform 0.4s;
-
-		&.hidden {
-			transform: translateY(-1rem) translateY(-100%);
+		button {
+			&.hidden {
+				transform: translateY(1rem) translateY(100%);
+			}
 		}
 	}
 }
