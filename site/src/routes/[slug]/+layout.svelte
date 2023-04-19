@@ -6,9 +6,10 @@
 	import { page } from '$app/stores'
 	import ArchiveView from '../../components/ArchiveView.svelte'
 	import IconButton from '../../components/buttons/IconButton.svelte'
-	import { archiveItems, lastActivity, pointer, preferences } from '../../store'
+	import { archiveItems, interactedWithPage, lastActivity, pointer, preferences } from '../../store'
 	import type { LayoutData } from './$houdini'
 	import type { ArchiveBySlug$result } from '$houdini'
+	import { gotoCurrentArchive } from '../../lib/utils/gotoHelpers'
 
 	export let data: LayoutData
 
@@ -52,7 +53,11 @@
 	<IconButton
 		type="info"
 		on:click={() => {
-			goto(`/${$page.params.slug}/about`)
+			if ($page.route.id?.includes('about')) {
+				gotoCurrentArchive()
+			} else {
+				goto(`/${$page.params.slug}/about`)
+			}
 		}}
 	/>
 </div>
