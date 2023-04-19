@@ -62,4 +62,12 @@ i {
 		bottom: 1rem;
 		width: 5.75rem;
 	}
+
+	button {
+		transition: transform 0.4s;
+
+		&.hidden {
+			transform: translateY(-1rem) translateY(-100%);
+		}
+	}
 }

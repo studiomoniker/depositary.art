@@ -9,7 +9,14 @@ export function gotoItemSlug(slug: string) {
 	goto(`/${archive}/${slug}`)
 }
 
-export function gotoCurrentArchive() {
+// TODO:  add parameter to optionally deselect paper
+export function gotoCurrentArchive(deselectPaper = false) {
+	if (deselectPaper) {
+		const currentlySelected = get(selectedPaper)
+		if (currentlySelected) currentlySelected.deselect()
+		selectedPaper.set(undefined)
+	}
+
 	if (get(selectedPaper)) return
 
 	console.log('go to current archive')
