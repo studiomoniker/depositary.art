@@ -1,9 +1,8 @@
 <script lang="ts">
-	import { T, useFrame, useThrelte } from '@threlte/core'
+	import { useFrame, useThrelte } from '@threlte/core'
 	import { useInteractivity } from '@threlte/extras'
 	import { createEventDispatcher } from 'svelte'
-	import { get } from 'svelte/store'
-	import { Mesh, OrthographicCamera, PerspectiveCamera, Vector2, Vector3 } from 'three'
+	import { Mesh, Vector2, Vector3 } from 'three'
 
 	const dispatch = createEventDispatcher<{
 		change: {
@@ -21,7 +20,7 @@
 		// mapping 2d screen space to 3d world space
 		const { x: mouseX, y: mouseY } = $pointer
 
-		const cam = get(camera) as PerspectiveCamera | OrthographicCamera
+		const cam = camera.current
 
 		unprojected.set(mouseX, mouseY, 0).unproject(cam)
 		unprojected.sub(cam.position).normalize()

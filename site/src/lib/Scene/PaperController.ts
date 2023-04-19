@@ -120,12 +120,6 @@ class PaperController {
 
 		this.dragger = new PaperDragAnimation(this)
 		this.selector = new PaperSelectAnimation(this)
-
-		document.addEventListener('visibilitychange', (e) => {
-			if (document.hidden) {
-				this.scale.set(get(this.scale))
-			}
-		})
 	}
 
 	private async loadTexture() {

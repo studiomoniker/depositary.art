@@ -37,8 +37,15 @@
 		})
 	)
 
-	const cancelTimeout = () => {
+	const onVisibilityChange = () => {
 		if (timeout) clearTimeout(timeout)
+
+		// @Thomas: This moved from the individual PaperController to here.
+		if (document.hidden || document.visibilityState === 'hidden') {
+			$papers.forEach((paper) => {
+				paper.scale.update((v) => v)
+			})
+		}
 	}
 
 	interactivity()
@@ -56,35 +63,18 @@
 	light.position.set(-3, 5, 10)
 	light.castShadow = true
 	light.intensity = 0.5
-
-	let useOrtho = false
-
-	useFrame(({ renderer }) => {
-		;(window as any).calls = renderer?.info.render.calls
-		;(window as any).points = renderer?.info.render.points
-	})
 </script>
 
-<svelte:window on:visibilitychange={cancelTimeout} />
+<svelte:window on:visibilitychange={onVisibilityChange} />
 
-{#if useOrtho}
-	<T.OrthographicCamera
-		makeDefault
-		position={INITIAL_CAMERA_POSITION}
-		near={0.1}
-		far={100}
-		zoom={INITIAL_CAMERA_ZOOM}
-	/>
-{:else}
-	<T.PerspectiveCamera
-		lookAt={{ x: 0, y: 0, z: 0 }}
-		makeDefault
-		position={[0, 0, 10]}
-		fov={48}
-		near={0.1}
-		far={100}
-	/>
-{/if}
+<T.PerspectiveCamera
+	lookAt={{ x: 0, y: 0, z: 0 }}
+	makeDefault
+	position={[0, 0, 10]}
+	fov={48}
+	near={0.1}
+	far={100}
+/>
 
 <T is={light} />
 <T.AmbientLight position={[0, 10, 20]} intensity={0.8} />
