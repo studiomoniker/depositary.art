@@ -1,12 +1,20 @@
 import { replaceBottomPaper } from '$lib/initPapers'
 import type { ArchiveItem } from '$lib/types'
-import { gotoCurrentArchive, gotoItemSlug } from '$lib/utils/gotoHelpers'
 import OrderManager from '$lib/utils/OrderManager'
+import { gotoCurrentArchive, gotoItemSlug } from '$lib/utils/gotoHelpers'
 import type { ThrelteContext, useCache } from '@threlte/core'
 import { cubicOut, sineInOut } from 'svelte/easing'
 import { spring, tweened } from 'svelte/motion'
 import { get, writable } from 'svelte/store'
-import { Mesh, sRGBEncoding, Texture, TextureLoader, Vector2 } from 'three'
+import {
+	FrontSide,
+	Mesh,
+	MeshStandardMaterial,
+	Texture,
+	TextureLoader,
+	Vector2,
+	sRGBEncoding
+} from 'three'
 import { PAPER_THICKNESS, SCALE } from '../../settings'
 import { draggingPaperMesh, papers, selectedPaper } from '../../store'
 import { getStartPosition } from '../utils/getStartPosition'
@@ -52,6 +60,7 @@ class PaperController {
 	metadata
 	threlte
 	texture!: Texture
+	material!: MeshStandardMaterial
 	hasTexture = false
 	scale = spring(1, {
 		precision: 0.0001
@@ -120,12 +129,24 @@ class PaperController {
 	}
 
 	private async loadTexture() {
-		this.texture = await this.#cache.remember(async () => {
+		const [texture, material] = await this.#cache.remember(async () => {
 			const loader = new TextureLoader()
-			return await loader.loadAsync(this.#textureUrl)
+			const texture = await loader.loadAsync(this.#textureUrl)
+			const material = new MeshStandardMaterial({
+				map: texture,
+				transparent: true,
+				side: FrontSide
+			})
+			return [texture, material]
 		}, [TextureLoader, this.#textureUrl])
+
+		this.texture = texture
+		this.material = material
 	}
 
+	/**
+	 * Create a new PaperController
+	 */
 	public static async createPaperController(
 		data: PaperData & {
 			onload?: () => void
