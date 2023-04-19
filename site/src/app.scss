@@ -61,7 +61,7 @@ i {
 	button {
 		transition: transform 0.4s;	
 		&.hidden {
-			transform: translateY(-1rem) translateY(-100%);
+			transform: translateY(-2rem) translateY(-100%);
 		}
 	}
 
@@ -72,7 +72,7 @@ i {
 
 		button {
 			&.hidden {
-				transform: translateY(1rem) translateY(100%);
+				transform: translateY(2rem) translateY(100%);
 			}
 		}
 	}
