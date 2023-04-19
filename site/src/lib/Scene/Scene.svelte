@@ -10,6 +10,7 @@
 	import type { ArchiveItem } from '../types'
 	import ControlPoint from './ControlPoint.svelte'
 	import NewPaper from './Paper.svelte'
+	import { gotoCurrentArchive } from '../utils/gotoHelpers'
 
 	export let items: ArchiveItem[]
 
@@ -113,7 +114,13 @@
 	/>
 {/if}
 
-<T.Mesh receiveShadow position={[0, 0, -0.15]}>
+<T.Mesh
+	receiveShadow
+	position={[0, 0, -0.15]}
+	on:click={() => {
+		gotoCurrentArchive()
+	}}
+>
 	<T.PlaneGeometry args={[100, 100]} />
 	<T.MeshStandardMaterial color="white" />
 </T.Mesh>
