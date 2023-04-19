@@ -93,6 +93,9 @@
 {/if}
 
 <style>
+	.captions {
+		user-select: none;
+	}
 	/* .timer {
 		background: white;
 		position: absolute;
