@@ -2,7 +2,7 @@ import { replaceBottomPaper } from '$lib/initPapers'
 import type { ArchiveItem } from '$lib/types'
 import { gotoCurrentArchive, gotoItemSlug } from '$lib/utils/gotoHelpers'
 import OrderManager from '$lib/utils/OrderManager'
-import type { ThrelteContext } from '@threlte/core'
+import type { ThrelteContext, useCache } from '@threlte/core'
 import { cubicOut, sineInOut } from 'svelte/easing'
 import { spring, tweened } from 'svelte/motion'
 import { get, writable } from 'svelte/store'
@@ -42,13 +42,16 @@ const Z_ON_TOP = 1.5
 const calcZ = (order: number) => (order + 10) * PAPER_THICKNESS
 
 class PaperController {
+	#cache
+	#textureUrl
+
 	dragger
 	selector
 	mesh?: Mesh
 	active = true
 	metadata
 	threlte
-	texture: Texture
+	texture!: Texture
 	hasTexture = false
 	scale = spring(1, {
 		precision: 0.0001
@@ -76,91 +79,28 @@ class PaperController {
 	textOpacity = writable(0)
 	dragStart = Date.now()
 
-	constructor(
+	private constructor(
 		data: PaperData & {
 			onload?: () => void
 			onerror?: (err: Error) => void
 		},
-		ctx: ThrelteContext
+		ctx: ThrelteContext,
+		cache: ReturnType<typeof useCache>
 	) {
 		this.id = data.id
 		this.metadata = data.metadata
 		this.threlte = ctx
+		this.#cache = cache
+
 		if (!data.metadata.image?.id) throw new Error('No texture for item')
 
-		let textureUrl = data.metadata.image.id
+		this.#textureUrl = data.metadata.image.id
 		// only fake/test images have exactly the same ids
 		if (data.metadata.id !== data.id) {
-			textureUrl = `${import.meta.env.VITE_CMS}/assets/${data.metadata.image.id}?access_token=${
-				import.meta.env.VITE_AUTH_TOKEN
-			}&key=fit-640`
+			this.#textureUrl = `${import.meta.env.VITE_CMS}/assets/${
+				data.metadata.image.id
+			}?access_token=${import.meta.env.VITE_AUTH_TOKEN}&key=fit-640`
 		}
-
-		this.texture = new TextureLoader().load(textureUrl, () => {
-			this.texture.encoding = sRGBEncoding
-			// calcuate size of paper based on image
-			this.ratio = this.texture.image.naturalWidth / this.texture.image.naturalHeight
-			const max = 2.5 * SCALE
-			let w, h
-			if (this.ratio >= 1.0) {
-				w = max
-				h = max / this.ratio
-			} else {
-				this.isPortrait = true
-				w = max * this.ratio
-				h = max
-			}
-
-			// animate paper from random position to spawn position
-			this.size = [w, h]
-			this.spawnPosition = new Vector2(data.x, data.y)
-
-			const cam = get(ctx.camera)
-			const startPosition = data.selected
-				? { x: data.x, y: data.y }
-				: getStartPosition(this.spawnPosition, cam)
-			this.xy.set(startPosition)
-
-			setTimeout(
-				async () => {
-					this.hasTexture = true
-					if (data.selected) return
-
-					const t = spring(
-						{
-							...startPosition,
-							r: get(this.rotation).z
-						},
-						{
-							stiffness: 0.03,
-							damping: 0.6,
-							precision: 0.0001
-						}
-					)
-					t.subscribe((val) => {
-						if (!this.isDragging && !this.isSelected) {
-							this.xy.set({ x: val.x, y: val.y })
-							this.rotation.update((r) => {
-								r.z = val.r
-								return r
-							})
-						}
-					})
-					t.set({
-						x: this.spawnPosition.x,
-						y: this.spawnPosition.y,
-						r: Math.random() * Math.PI
-					})
-				},
-				data.selected || import.meta.env.DEV ? 0 : 500 + Math.random() * 3000
-			)
-
-			if (data.selected) {
-				setTimeout(() => this.select(), 10)
-			}
-
-			if (data.onload) data.onload()
-		})
 
 		this.order = data.order
 		this.setOrder(data.order)
@@ -177,6 +117,93 @@ class PaperController {
 				this.scale.set(get(this.scale))
 			}
 		})
+	}
+
+	private async loadTexture() {
+		this.texture = await this.#cache.remember(async () => {
+			const loader = new TextureLoader()
+			return await loader.loadAsync(this.#textureUrl)
+		}, [TextureLoader, this.#textureUrl])
+	}
+
+	public static async createPaperController(
+		data: PaperData & {
+			onload?: () => void
+			onerror?: (err: Error) => void
+		},
+		ctx: ThrelteContext,
+		cache: ReturnType<typeof useCache>
+	) {
+		const controller = new PaperController(data, ctx, cache)
+
+		await controller.loadTexture()
+
+		controller.texture.encoding = sRGBEncoding
+		// calcuate size of paper based on image
+		controller.ratio =
+			controller.texture.image.naturalWidth / controller.texture.image.naturalHeight
+		const max = 2.5 * SCALE
+		let w, h
+		if (controller.ratio >= 1.0) {
+			w = max
+			h = max / controller.ratio
+		} else {
+			controller.isPortrait = true
+			w = max * controller.ratio
+			h = max
+		}
+
+		// animate paper from random position to spawn position
+		controller.size = [w, h]
+		controller.spawnPosition = new Vector2(data.x, data.y)
+
+		const cam = get(ctx.camera)
+		const startPosition = data.selected
+			? { x: data.x, y: data.y }
+			: getStartPosition(controller.spawnPosition, cam)
+		controller.xy.set(startPosition)
+
+		setTimeout(
+			async () => {
+				controller.hasTexture = true
+				if (data.selected) return
+
+				const t = spring(
+					{
+						...startPosition,
+						r: get(controller.rotation).z
+					},
+					{
+						stiffness: 0.03,
+						damping: 0.6,
+						precision: 0.0001
+					}
+				)
+				t.subscribe((val) => {
+					if (!controller.isDragging && !controller.isSelected) {
+						controller.xy.set({ x: val.x, y: val.y })
+						controller.rotation.update((r) => {
+							r.z = val.r
+							return r
+						})
+					}
+				})
+				t.set({
+					x: controller.spawnPosition.x,
+					y: controller.spawnPosition.y,
+					r: Math.random() * Math.PI
+				})
+			},
+			data.selected || import.meta.env.DEV ? 0 : 500 + Math.random() * 3000
+		)
+
+		if (data.selected) {
+			setTimeout(() => controller.select(), 10)
+		}
+
+		if (data.onload) data.onload()
+
+		return controller
 	}
 
 	public tick() {
@@ -331,7 +358,7 @@ class PaperController {
 	moveToTop(shouldReplaceBottomPaper = false) {
 		OrderManager.moveToTop(this)
 
-		if (shouldReplaceBottomPaper) replaceBottomPaper(this.threlte)
+		if (shouldReplaceBottomPaper) replaceBottomPaper(this.threlte, this.#cache)
 	}
 }
 
