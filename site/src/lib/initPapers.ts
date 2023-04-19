@@ -101,14 +101,14 @@ export const createPapersFromItems = async (
 
 	const positions = calcInitialPaperPositions(ctx)
 
-	const papersPromises = positions.slice(0, items.length).map(({ x, y }, i) => {
+	positions.slice(0, items.length).forEach(async ({ x, y }, i) => {
 		const item = items[i % items.length]
 		if (!item.image) return
 
 		const selected = !createdSelectedPaper && selectedItemId === item.id
 		if (selected) createdSelectedPaper = true
 
-		return createPaper(
+		const paper = await createPaper(
 			{
 				x,
 				y,
@@ -119,12 +119,13 @@ export const createPapersFromItems = async (
 			},
 			cache
 		)
+		papers.update((papers) => {
+			papers.push(paper)
+			return papers
+		})
+
+		OrderManager.setPapers(get(papers))
 	})
-
-	const newPapers = (await Promise.all(papersPromises)).filter(Boolean)
-
-	OrderManager.setPapers(newPapers)
-	papers.set(newPapers)
 }
 
 export const insertRandomItem = async (
