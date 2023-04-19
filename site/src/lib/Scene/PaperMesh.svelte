@@ -21,10 +21,6 @@
 
 	let startPosition: Vector3 | null = null
 	const portal = document.querySelector('.portal')! as HTMLDivElement
-
-	useFrame(({ renderer }) => {
-		;(window as any).calls = renderer?.info.render.calls
-	})
 </script>
 
 <svelte:window
