@@ -57,14 +57,14 @@
 			time = 0
 
 			if (state === 'PAUSED') {
-				if (index >= texts.length) index = 0
-
 				state = 'READING'
 				endTime = calculateTime(texts[index].text)
 			} else if (state === 'READING') {
 				state = 'PAUSED'
 				endTime = PAUSE
+
 				index++
+				if (index >= texts.length) index = 0
 			}
 		}
 	}
