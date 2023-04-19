@@ -118,7 +118,7 @@
 	receiveShadow
 	position={[0, 0, -0.15]}
 	on:click={() => {
-		gotoCurrentArchive()
+		gotoCurrentArchive(true)
 	}}
 >
 	<T.PlaneGeometry args={[100, 100]} />
