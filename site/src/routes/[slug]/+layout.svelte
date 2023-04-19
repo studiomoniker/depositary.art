@@ -44,7 +44,11 @@
 <svelte:window on:pointermove={updateMousePosition} on:pointerdown={updateActivity} />
 
 <div class="buttons">
-	<IconButton type={$preferences.muted ? 'unmute' : 'mute'} on:click={toggleMute} />
+	<IconButton
+		type={$preferences.muted ? 'unmute' : 'mute'}
+		on:click={toggleMute}
+		class={$interactedWithPage ? '' : 'hidden'}
+	/>
 	<IconButton
 		type="info"
 		on:click={() => {

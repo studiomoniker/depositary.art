@@ -28,3 +28,7 @@ export const archiveItems = writable<
 >(null)
 
 export const lastActivity = writable(Date.now())
+
+// Store whether the user interacted with the page in any way.
+// Useful for determining whether to show the mute button.
+export const interactedWithPage = writable(false)

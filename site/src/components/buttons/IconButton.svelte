@@ -5,7 +5,7 @@
 	export let inverted: boolean = false
 
 	const dispatch = createEventDispatcher()
-	const classes = [$$props.class, `button-${type}`].join(' ')
+	$: classes = [$$restProps.class, `button-${type}`].join(' ')
 </script>
 
 <button on:click={(e) => dispatch('click', e)} class={classes} class:inverted>
