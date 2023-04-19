@@ -87,8 +87,3 @@
 		})
 	})
 </script>
-
-<!-- <T.Mesh position={[position.x, position.y, 1.6]} rotation.z={angle}>
-	<T.PlaneGeometry args={[0.2, 0.2]} />
-	<T.MeshStandardMaterial color="purple" />
-</T.Mesh> -->

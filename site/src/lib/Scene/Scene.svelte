@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { T, useCache, useThrelte } from '@threlte/core'
+	import { T, useCache, useFrame, useThrelte } from '@threlte/core'
 	import { interactivity } from '@threlte/extras'
 	import { random } from 'lodash-es'
 	import { onDestroy, onMount } from 'svelte'
@@ -43,22 +43,6 @@
 
 	interactivity()
 
-	// const { pointer } = useThrelte();
-
-	// const maxOffset = 0.05;
-
-	// const offsetX = spring($pointer.x * maxOffset, {
-	// 	precision: 0.0001,
-	// 	stiffness: 0.05
-	// });
-	// $: offsetX.set($pointer.x * maxOffset);
-
-	// const offsetY = spring($pointer.y * maxOffset, {
-	// 	precision: 0.0001,
-	// 	stiffness: 0.05
-	// });
-	// $: offsetY.set($pointer.y * maxOffset);
-
 	let light = new DirectionalLight()
 	light.shadow.mapSize.width = 2048
 	light.shadow.mapSize.height = 2048
@@ -74,6 +58,11 @@
 	light.intensity = 0.5
 
 	let useOrtho = false
+
+	useFrame(({ renderer }) => {
+		;(window as any).calls = renderer?.info.render.calls
+		;(window as any).points = renderer?.info.render.points
+	})
 </script>
 
 <svelte:window on:visibilitychange={cancelTimeout} />

@@ -3,7 +3,7 @@
 	import { onDestroy } from 'svelte'
 	import { spring, tweened } from 'svelte/motion'
 	import { get } from 'svelte/store'
-	import { MathUtils } from 'three'
+	import { Group, MathUtils } from 'three'
 	import { pointer, selectedPaper } from '../../store'
 	import type PaperController from './PaperController'
 	import PaperMesh from './PaperMesh.svelte'
@@ -55,6 +55,8 @@
 		})
 	)
 
+	let group: Group
+
 	useFrame((_, delta) => {
 		paper.tick()
 
@@ -83,6 +85,12 @@
 			z: $z,
 			y: pY
 		}
+
+		if (!group) return
+		group.position.set(combinedPosition.x, combinedPosition.y, combinedPosition.z)
+		group.rotation.set(combinedRotation.x, combinedRotation.y, combinedRotation.z)
+		group.scale.x = $scale
+		group.scale.y = $scale
 	})
 
 	$: {
@@ -97,16 +105,7 @@
 </script>
 
 {#if paper.hasTexture}
-	<T.Group
-		position.x={combinedPosition.x}
-		position.y={combinedPosition.y}
-		position.z={combinedPosition.z}
-		scale.y={$scale}
-		scale.x={$scale}
-		rotation.z={$rotation.z}
-		rotation.y={combinedRotation.y}
-		rotation.x={combinedRotation.x}
-	>
+	<T.Group bind:ref={group}>
 		<PaperMesh {paper} />
 	</T.Group>
 {/if}
