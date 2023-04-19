@@ -1,12 +1,44 @@
 <script lang="ts">
-	import { T } from '@threlte/core'
+	import { T, useCache, useThrelte } from '@threlte/core'
 	import { interactivity } from '@threlte/extras'
-
+	import { random } from 'lodash-es'
+	import { onDestroy, onMount } from 'svelte'
 	import { DirectionalLight } from 'three'
 	import { INITIAL_CAMERA_POSITION, INITIAL_CAMERA_ZOOM } from '../../settings'
-	import { draggingPaperMesh, papers } from '../../store'
+	import { draggingPaperMesh, lastActivity, papers } from '../../store'
+	import { createPapersFromItems, replaceBottomPaper } from '../initPapers'
+	import type { ArchiveItem } from '../types'
 	import ControlPoint from './ControlPoint.svelte'
 	import NewPaper from './Paper.svelte'
+
+	export let items: ArchiveItem[]
+
+	const ctx = useThrelte()
+	const cache = useCache()
+
+	let timeout: NodeJS.Timeout
+
+	onMount(() => {
+		createPapersFromItems(ctx, items, cache)
+	})
+
+	const createPaperTimeout = () => {
+		timeout = setTimeout(() => {
+			replaceBottomPaper(ctx, cache)
+			createPaperTimeout()
+		}, random(5000, 8000))
+	}
+
+	onDestroy(
+		lastActivity.subscribe(() => {
+			if (timeout) clearTimeout(timeout)
+			createPaperTimeout()
+		})
+	)
+
+	const cancelTimeout = () => {
+		if (timeout) clearTimeout(timeout)
+	}
 
 	interactivity()
 
@@ -42,6 +74,8 @@
 
 	let useOrtho = false
 </script>
+
+<svelte:window on:visibilitychange={cancelTimeout} />
 
 {#if useOrtho}
 	<T.OrthographicCamera

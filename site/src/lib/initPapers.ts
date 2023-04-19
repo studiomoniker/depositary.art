@@ -1,6 +1,6 @@
 import { page } from '$app/stores'
 import { uuid4 } from '@sentry/utils'
-import type { ThrelteContext } from '@threlte/core'
+import type { ThrelteContext, useCache } from '@threlte/core'
 import { random, sample, shuffle } from 'lodash-es'
 import { get } from 'svelte/store'
 import { Camera, Vector3 } from 'three'
@@ -12,22 +12,25 @@ import type { ArchiveItem } from './types'
 import { getUnprojectedPosition } from './utils/getUnprojectedPosition'
 import OrderManager from './utils/OrderManager'
 
-export const createPaper = ({
-	x,
-	y,
-	order = 0,
-	threlte,
-	item,
-	selected = false
-}: {
-	x: number
-	y: number
-	order?: number
-	threlte: ThrelteContext
-	item: ArchiveItem
-	selected: boolean
-}) =>
-	new PaperController(
+export const createPaper = (
+	{
+		x,
+		y,
+		order = 0,
+		threlte,
+		item,
+		selected = false
+	}: {
+		x: number
+		y: number
+		order?: number
+		threlte: ThrelteContext
+		item: ArchiveItem
+		selected: boolean
+	},
+	cache: ReturnType<typeof useCache>
+) =>
+	PaperController.createPaperController(
 		{
 			id: `${item.id}-${uuid4()}`,
 			x,
@@ -36,7 +39,8 @@ export const createPaper = ({
 			metadata: item,
 			selected
 		},
-		threlte
+		threlte,
+		cache
 	)
 
 export const getRandomPaperPosition = (camera: Camera) => {
@@ -85,71 +89,49 @@ const calcInitialPaperPositions = (ctx: ThrelteContext) => {
 	return positions
 }
 
-export const initPapers = (ctx: ThrelteContext) => {
-	console.log('create random papers')
-	const positions = calcInitialPaperPositions(ctx)
-
-	const newPapers: PaperController[] = []
-	positions.forEach(({ x, y }, i) => {
-		const texture = `textures/${i % 29}.jpg`
-		const p = createPaper({
-			x,
-			y,
-			order: i,
-			threlte: ctx,
-			item: {
-				id: uuid4(),
-				image: {
-					id: texture
-				},
-				title: `Test Title ${i}`,
-				description: `<p>Test Description ${i}</p>`,
-				palette: {
-					Vibrant: [0, 200, 200]
-				}
-			},
-			selected: false
-		})
-
-		newPapers.push(p)
-	})
-
-	OrderManager.setPapers(newPapers)
-	papers.set(newPapers)
-}
-
-export const createPapersFromItems = (ctx: ThrelteContext, items: ArchiveItem[]) => {
+export const createPapersFromItems = async (
+	ctx: ThrelteContext,
+	items: ArchiveItem[],
+	cache: ReturnType<typeof useCache>
+) => {
 	console.log('create papers from items')
-	const newPapers: PaperController[] = []
 
 	let createdSelectedPaper = false
 	const selectedItemId = get(page).params.item
 
 	const positions = calcInitialPaperPositions(ctx)
 
-	positions.slice(0, items.length).forEach(({ x, y }, i) => {
+	const papersPromises = positions.slice(0, items.length).map(({ x, y }, i) => {
 		const item = items[i % items.length]
 		if (!item.image) return
 
 		const selected = !createdSelectedPaper && selectedItemId === item.id
 		if (selected) createdSelectedPaper = true
 
-		const p = createPaper({
-			x,
-			y,
-			order: i,
-			threlte: ctx,
-			item,
-			selected
-		})
-		newPapers.push(p)
+		return createPaper(
+			{
+				x,
+				y,
+				order: i,
+				threlte: ctx,
+				item,
+				selected
+			},
+			cache
+		)
 	})
+
+	const newPapers = (await Promise.all(papersPromises)).filter(Boolean)
 
 	OrderManager.setPapers(newPapers)
 	papers.set(newPapers)
 }
 
-export const insertRandomItem = (ctx: ThrelteContext, position?: { x: number; y: number }) => {
+export const insertRandomItem = async (
+	ctx: ThrelteContext,
+	cache: ReturnType<typeof useCache>,
+	position?: { x: number; y: number }
+) => {
 	const { x, y } = position ?? getRandomPaperPosition(get(ctx.camera))
 
 	// we don't want the same image on the screen twice
@@ -172,14 +154,17 @@ export const insertRandomItem = (ctx: ThrelteContext, position?: { x: number; y:
 	const item = sample(options)
 	if (!item) throw new Error('Can not pick random item')
 
-	const p = createPaper({
-		x,
-		y,
-		order: -9999,
-		threlte: ctx,
-		item,
-		selected: false
-	})
+	const p = await createPaper(
+		{
+			x,
+			y,
+			order: -9999,
+			threlte: ctx,
+			item,
+			selected: false
+		},
+		cache
+	)
 
 	papers.update((items) => {
 		OrderManager.addPaper(p)
@@ -188,10 +173,10 @@ export const insertRandomItem = (ctx: ThrelteContext, position?: { x: number; y:
 	})
 }
 
-export const replaceBottomPaper = (threlte: ThrelteContext) => {
+export const replaceBottomPaper = (threlte: ThrelteContext, cache: ReturnType<typeof useCache>) => {
 	const bottomPaper = OrderManager.removeBottomPaper()
 	if (bottomPaper) {
-		setTimeout(() => insertRandomItem(threlte, get(bottomPaper.xy)), random(500, 2000))
+		setTimeout(() => insertRandomItem(threlte, cache, get(bottomPaper.xy)), random(500, 2000))
 		bottomPaper?.fadeOut()
 	}
 }
