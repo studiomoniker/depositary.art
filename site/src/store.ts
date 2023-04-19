@@ -3,13 +3,14 @@ import type PaperController from '$lib/Scene/PaperController'
 import { persisted } from 'svelte-local-storage-store'
 import { writable } from 'svelte/store'
 import type { Mesh } from 'three'
+import { paperControllerWritable } from './lib/paperControllerWritable'
 
 export const pointer = writable({ x: 0, y: 0 })
 
 export const draggingPaperMesh = writable<PaperController | undefined>()
 export const clickedPaperMesh = writable<Mesh | undefined>()
 
-export const papers = writable<PaperController[]>([])
+export const papers = paperControllerWritable([])
 
 export const removeBottomPaper = () => {
 	papers.update((items) => {
