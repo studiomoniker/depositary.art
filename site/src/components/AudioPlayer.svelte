@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { tweened } from 'svelte/motion'
 	import { interactedWithPage, preferences } from '../store'
+	import { onMount } from 'svelte'
 
 	export let audioFileId: string
 	const url = `${import.meta.env.VITE_CMS}/assets/${audioFileId}?access_token=${
@@ -9,30 +10,19 @@
 
 	let audioEl: HTMLAudioElement | undefined = undefined
 	const fadeDuration = 800
-	let transitionVolume = 1
 	const volumeTween = tweened(0, {
 		duration: fadeDuration
 	})
+	let audioElMounted = false
+	let canPlayThrough = false
 
 	/**
-	 * We use a transition to fade the element out to prevent it from being removed from the DOM.
-	 * We cannot use an in-transition because we have to wait for the audio to play.
+	 * Dummy transition to keep the element in the DOM
 	 */
-	const fadeAudioOut = (_node: HTMLAudioElement) => {
+	const transition = (_node: HTMLAudioElement) => {
 		return {
-			tick(t: number) {
-				transitionVolume = t
-			},
 			duration: fadeDuration
 		}
-	}
-
-	/**
-	 * Reset all the values when the audio element is mounted
-	 */
-	const onAudioElMount = (node: HTMLAudioElement) => {
-		transitionVolume = 1
-		volumeTween.set(0, { duration: 0 })
 	}
 
 	/**
@@ -44,23 +34,38 @@
 		volumeTween.set(1, { duration: fadeDuration })
 	}
 
-	$: combinedVolume = $volumeTween * transitionVolume
-	$: if (audioEl) audioEl.volume = combinedVolume
-	$: mountAudioEl = $interactedWithPage && !$preferences.muted
+	$: if (audioEl) audioEl.volume = $volumeTween
+	$: if ($interactedWithPage && !$preferences.muted && canPlayThrough && audioElMounted) {
+		play()
+		volumeTween.set(1, { duration: fadeDuration })
+	} else {
+		volumeTween.set(0, { duration: fadeDuration })
+	}
+
+	let mounted = false
+	onMount(() => {
+		mounted = true
+	})
 </script>
 
-{#if mountAudioEl}
+{#if mounted}
 	<audio
 		bind:this={audioEl}
-		use:onAudioElMount
-		out:fadeAudioOut
-		on:canplaythrough|once={play}
+		transition:transition
+		on:introstart={() => {
+			volumeTween.set(0, { duration: 0 })
+			audioElMounted = true
+		}}
+		on:outrostart={() => {
+			audioElMounted = false
+		}}
+		on:canplaythrough|once={() => {
+			canPlayThrough = true
+		}}
 		src={url}
 		hidden
 		loop
 		playsinline
+		preload="auto"
 	/>
-{:else}
-	<!-- We'll mount this one just for the browser to start loading the source -->
-	<audio hidden preload="auto" src={url} />
 {/if}
