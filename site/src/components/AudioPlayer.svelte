@@ -58,6 +58,7 @@
 		src={url}
 		hidden
 		loop
+		playsinline
 	/>
 {:else}
 	<!-- We'll mount this one just for the browser to start loading the source -->
