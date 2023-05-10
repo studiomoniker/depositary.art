@@ -3,8 +3,8 @@ import type PaperController from '$lib/Scene/PaperController'
 class OrderManager {
 	private papers: PaperController[] = []
 
-	get bottomPaper() {
-		return this.papers.at(0)
+	get bottomPaper(): PaperController | undefined {
+		return this.papers[0]
 	}
 
 	setPapers(papers: PaperController[]) {

@@ -19,8 +19,8 @@
 	const updateArchiveItemsStore = (data: ArchiveBySlug$result | null) => {
 		if (!browser) return
 		let items = null
-		if (data?.archives?.at(0)?.items) {
-			items = data.archives.at(0)!.items
+		if (data?.archives?.[0]?.items) {
+			items = data.archives[0].items
 		}
 		$archiveItems = items
 	}
