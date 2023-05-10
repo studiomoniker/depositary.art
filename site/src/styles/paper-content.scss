@@ -1,15 +1,5 @@
 @import '_mixins';
 
-.paper-html {
-	position: absolute;
-	transform: translateX(-50%) translateY(-50%); // pointer-events: all;
-	overflow: hidden;
-
-	&.scrollable {
-		overflow: auto;
-	}
-}
-
 .paper-content {
 	box-sizing: border-box;
 	font-size: 1.5rem;
@@ -30,27 +20,33 @@
 		color: #111;
 	}
 
-	.button-container {
-		position: absolute !important;
-		top: 0.75em;
-		right: 0.75em;
-		height: 2.5em;
-		width: 2.5em;
-	}
-
 	@include breakpoint-lt('md') {
 		font-size: 2.1rem;
 
 		h1 {
 			font-size: 2.1em;
 		}
+	}
+}
 
-		.button-container {
-			top: 0.5em;
-			right: 0.5em;
-			height: 2em;
-			width: 2em;
-		}
+.button-container {
+	font-size: 1.5rem;
+	position: absolute !important;
+	top: 0.75em;
+	right: 0.75em;
+	height: 2.5em;
+	width: 2.5em;
+}
+
+@include breakpoint-lt('md') {
+	
+	.button-container {
+		font-size: 2.1rem;
+		position: absolute !important;
+		top: 0.5em;
+		right: 0.5em;
+		height: 2em;
+		width: 2em;
 	}
 }
 

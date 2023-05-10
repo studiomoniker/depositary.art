@@ -3,6 +3,7 @@
 	import { onDestroy, onMount } from 'svelte'
 	import type PaperController from '../lib/Scene/PaperController'
 	import PaperContent from './PaperContent.svelte'
+	import IconButton from './buttons/IconButton.svelte'
 
 	export let paper: PaperController
 	$: textOpacity = paper.textOpacity
@@ -33,11 +34,33 @@
 	})
 </script>
 
-<div
-	class="paper-html"
-	class:scrollable={detectIt.primaryInput !== 'touch' && $textOpacity > 0.7}
-	style="width: {width}px; height: {height}px;"
-	bind:this={el}
->
-	<PaperContent {paper} />
+<div class="paper-wrapper" style="width: {width}px; height: {height}px;">
+	<div
+		class="paper-html"
+		class:scrollable={detectIt.primaryInput !== 'touch' && $textOpacity > 0.7}
+		bind:this={el}
+	>
+		<PaperContent {paper} />
+	</div>
+
+	<div class="button-container">
+		<IconButton type="close" on:click={() => paper.onClick()} class="close-button" />
+	</div>
 </div>
+
+<style lang="scss">
+	.paper-wrapper {
+		overflow: hidden;
+	}
+
+	.paper-html {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		overflow: hidden;
+
+		&.scrollable {
+			overflow: auto;
+		}
+	}
+</style>
