@@ -43,7 +43,7 @@
 		<PaperContent {paper} />
 	</div>
 
-	<div class="button-container">
+	<div class="button-container" style="opacity: {$textOpacity}">
 		<IconButton type="close" on:click={() => paper.onClick()} class="close-button" />
 	</div>
 </div>
