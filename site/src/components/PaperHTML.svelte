@@ -50,6 +50,8 @@
 
 <style lang="scss">
 	.paper-wrapper {
+		position: absolute;
+		transform: translateX(-50%) translateY(-50%);
 		overflow: hidden;
 	}
 
